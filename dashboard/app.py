@@ -1,11 +1,10 @@
 """
-HYRULE DATA INSIGHTS: DASHBOARD ANALÍTICO EJECUTIVO
-Segmentación Multivariada mediante K-Means | The Legend of Zelda Compendium
-Diseño Formal, Difuminados Glassmorphism e Iconografía Lucide
+GAMING SALES INTELLIGENCE: DASHBOARD ANALÍTICO EJECUTIVO
+Segmentación Multivariada mediante K-Means | Mercado de Videojuegos Físicos vs. Digitales
+Diseño Formal, Difuminados Glassmorphism e Iconografía Lucide (Sin emojis)
 """
 
 import os
-import json
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -14,7 +13,7 @@ import plotly.graph_objects as go
 
 # Configuración de página de Streamlit
 st.set_page_config(
-    page_title="Hyrule Data Insights | Segmentación K-Means",
+    page_title="Gaming Sales Intelligence | Segmentación K-Means",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -22,19 +21,16 @@ st.set_page_config(
 # BIBLIOTECA DE ICONOS LUCIDE (SVG Vectoriales puros)
 LUCIDE = {
     "layers": '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>',
-    "sword": '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="14.5 17.5 3 6 3 3 6 3 17.5 14.5"></polyline><line x1="13" y1="19" x2="19" y2="13"></line><line x1="16" y1="16" x2="20" y2="20"></line><line x1="19" y1="21" x2="21" y2="19"></line></svg>',
-    "shield": '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>',
-    "clock": '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>',
-    "coins": '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6"></circle><path d="M18.09 10.37A6 6 0 1 1 10.34 18"></path><path d="M7 6h1v4"></path><path d="M16.7 13.77h.01"></path></svg>',
+    "disc": '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="3"></circle></svg>',
+    "download": '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>',
+    "award": '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>',
     "sliders": '<svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg>',
     "chart_bar": '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>',
     "pie_chart": '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>',
     "scatter": '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"></circle><circle cx="18.5" cy="5.5" r=".5" fill="currentColor"></circle><circle cx="11.5" cy="11.5" r=".5" fill="currentColor"></circle><circle cx="7.5" cy="16.5" r=".5" fill="currentColor"></circle><circle cx="17.5" cy="14.5" r=".5" fill="currentColor"></circle></svg>',
     "cpu": '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="14" x2="23" y2="14"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="14" x2="4" y2="14"></line></svg>',
-    "compass": '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>',
     "info": '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>',
-    "check_circle": '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>',
-    "award": '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>'
+    "trending": '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>'
 }
 
 # ESTILOS CSS FORMALES CON DIFUMINADOS Y GLASSMORPHISM (Sin emojis)
@@ -120,613 +116,412 @@ st.markdown("""
         margin-top: 4px;
     }
 
-    /* Tarjetas descriptivas de Clústeres */
-    .cluster-profile-card {
-        background: linear-gradient(145deg, rgba(30, 41, 59, 0.5) 0%, rgba(15, 23, 42, 0.65) 100%);
-        backdrop-filter: blur(12px);
-        border-radius: 10px;
-        padding: 18px;
+    /* Tarjetas de Clúster Resumen */
+    .cluster-summary-card {
+        background: rgba(30, 41, 59, 0.45);
+        backdrop-filter: blur(10px);
         border: 1px solid rgba(255, 255, 255, 0.06);
-        border-left: 4px solid #3B82F6;
+        border-radius: 10px;
+        padding: 14px 18px;
         margin-bottom: 14px;
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     }
-    .cluster-title {
-        font-size: 0.98rem;
+    .cluster-summary-title {
+        font-size: 0.95rem;
         font-weight: 700;
-        color: #F8FAFC;
-        margin: 0 0 8px 0;
+        margin-bottom: 6px;
         display: flex;
         align-items: center;
         gap: 8px;
     }
-    .cluster-desc {
-        font-size: 0.85rem;
-        color: #CBD5E1;
-        line-height: 1.5;
-        margin: 0;
-    }
-    .cluster-tag {
-        display: inline-block;
-        padding: 2px 8px;
-        border-radius: 4px;
-        font-size: 0.72rem;
-        font-weight: 600;
-        margin-top: 8px;
-        background: rgba(255, 255, 255, 0.06);
-        color: #94A3B8;
-    }
 
-    /* Cajas informativas formales */
-    .insight-box {
-        background: rgba(30, 41, 59, 0.4);
-        border: 1px solid rgba(148, 163, 184, 0.15);
-        border-radius: 8px;
-        padding: 14px 16px;
-        font-size: 0.87rem;
-        color: #E2E8F0;
-        line-height: 1.55;
-    }
-    .insight-bullet {
-        margin-bottom: 8px;
-        display: flex;
-        align-items: flex-start;
-        gap: 8px;
-    }
-
-    /* Reducción de espaciados */
-    .block-container {
-        padding-top: 1.5rem !important;
-        padding-bottom: 2rem !important;
+    /* Barra lateral */
+    [data-testid="stSidebar"] {
+        background: linear-gradient(180deg, #0F172A 0%, #1E293B 100%) !important;
+        border-right: 1px solid rgba(148, 163, 184, 0.12) !important;
     }
 </style>
 """, unsafe_allow_html=True)
 
-# CARGA DE DATOS CON CACHÉ
-@st.cache_data
-def load_compendium():
-    csv_path = "data/zelda_hyrule_compendium_procesado.csv"
-    if not os.path.exists(csv_path):
-        csv_path = "../data/zelda_hyrule_compendium_procesado.csv"
-    df = pd.read_csv(csv_path)
-
-    json_path = "data/model_summary.json"
-    if not os.path.exists(json_path):
-        json_path = "../data/model_summary.json"
-    
-    summary = {}
-    if os.path.exists(json_path):
-        with open(json_path, "r", encoding="utf-8") as f:
-            summary = json.load(f)
-            
-    return df, summary
-
-df_all, model_summary = load_compendium()
-
-# PALETA FORMAL PARA CLÚSTERES (Equilibrada, seria y de alto contraste)
-FORMAL_CLUSTER_PALETTE = {
-    "Arsenal Ofensivo y Armas de Asalto": "#E11D48",              # Carmesí Formal
-    "Blindaje Táctico, Armaduras y Escudos": "#2563EB",            # Azul Cobalto Formal
-    "Recursos Básicos, Forraje y Consumibles": "#059669",          # Verde Esmeralda Formal
-    "Jefes Supremos, Calamidades y Reliquias Míticas": "#D97706"   # Ámbar Bronce Formal
+# Paleta formal corporativa para clústeres
+PALETA_CLUSTERS = {
+    "Superventas Globales (Blockbusters - Alto Físico y Digital)": "#E11D48",          # Rojo carmesí
+    "Éxitos Digitales e Indies Virales (Alta Descarga, Bajo Físico)": "#2563EB",       # Azul royal
+    "Coleccionables de Consola (Físico Fuerte, Digital Moderado)": "#059669",         # Verde esmeralda
+    "Fracasos Comerciales y Bajo Rendimiento (Ventas Bajas)": "#D97706"                # Ámbar oscuro
 }
 
-# BARRA LATERAL: NAVEGACIÓN Y FILTROS INTERACTIVOS FORMALES
-st.sidebar.markdown(f"""
-<div style='display:flex; align-items:center; gap:8px; padding-bottom: 12px; border-bottom: 1px solid rgba(148,163,184,0.15);'>
-    <span style='color:#60A5FA;'>{LUCIDE['cpu']}</span>
-    <span style='font-weight:700; font-size:1rem; color:#F8FAFC;'>Panel de Control</span>
-</div>
-""", unsafe_allow_html=True)
+@st.cache_data
+def load_data():
+    csv_path = "data/videojuegos_ventas_procesado.csv"
+    if not os.path.exists(csv_path):
+        # Fallback si no se ha ejecutado
+        return pd.DataFrame()
+    return pd.read_csv(csv_path)
 
-pagina = st.sidebar.radio(
-    "Navegación:",
-    ["Análisis General", "Segmentación K-Means"],
-    index=0
-)
+df = load_data()
 
-st.sidebar.markdown("<br>", unsafe_allow_html=True)
-st.sidebar.markdown(f"""
-<div style='display:flex; align-items:center; gap:6px; margin-bottom:10px;'>
-    <span style='color:#94A3B8;'>{LUCIDE['sliders']}</span>
-    <span style='font-size:0.85rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:#94A3B8;'>Filtros Multivariados</span>
-</div>
-""", unsafe_allow_html=True)
+if df.empty:
+    st.error("No se encontró el dataset procesado de videojuegos. Ejecuta 'python src/process_kmeans_videojuegos.py'")
+    st.stop()
 
-# Filtro 1: Clústeres
-clusters_disponibles = sorted(df_all["Cluster_Nombre"].unique())
-sel_clusters = st.sidebar.multiselect(
-    "Clúster:",
-    options=clusters_disponibles,
-    default=clusters_disponibles
-)
+# =============================================================================
+# BARRA LATERAL: CONTROL DE NAVEGACIÓN Y FILTROS INTERACTIVOS
+# =============================================================================
+with st.sidebar:
+    st.markdown(f"""
+    <div style="display:flex; align-items:center; gap:8px; padding-bottom:12px; border-bottom:1px solid rgba(148,163,184,0.15); margin-bottom:16px;">
+        <span style="color:#60A5FA;">{LUCIDE['cpu']}</span>
+        <span style="font-size:1.15rem; font-weight:700; color:#F8FAFC;">Panel de Control</span>
+    </div>
+    """, unsafe_allow_html=True)
 
-# Filtro 2: Categorías
-categorias_disponibles = sorted(df_all["category"].unique())
-sel_categorias = st.sidebar.multiselect(
-    "Categoría de Ítem:",
-    options=categorias_disponibles,
-    default=categorias_disponibles
-)
+    pagina = st.radio(
+        "Navegación:",
+        options=["Análisis General de Ventas", "Segmentación K-Means de Rendimiento"],
+        index=0
+    )
 
-# Filtro 3: Rango de Precio en Rupias
-min_p, max_p = int(df_all["sell_price"].min()), int(df_all["sell_price"].max())
-sel_precio = st.sidebar.slider(
-    "Precio en Rupias:",
-    min_value=min_p,
-    max_value=max_p,
-    value=(min_p, max_p),
-    step=50
-)
+    st.markdown("<hr style='border:none; border-top:1px solid rgba(148,163,184,0.15); margin:18px 0;'>", unsafe_allow_html=True)
+    st.markdown(f"""
+    <div style="display:flex; align-items:center; gap:6px; margin-bottom:12px;">
+        <span style="color:#94A3B8;">{LUCIDE['sliders']}</span>
+        <span style="font-size:0.82rem; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:#94A3B8;">Filtros Multivariados</span>
+    </div>
+    """, unsafe_allow_html=True)
 
-# Filtro 4: Nivel de Rareza
-sel_rareza = st.sidebar.slider(
-    "Nivel de Rareza (Tier 1 a 5):",
-    min_value=1,
-    max_value=5,
-    value=(1, 5)
-)
+    # 1. Filtro por Clúster
+    clusters_disponibles = sorted(df["Cluster_Nombre"].dropna().unique())
+    sel_clusters = st.multiselect(
+        "Clúster:",
+        options=clusters_disponibles,
+        default=clusters_disponibles
+    )
+
+    # 2. Filtro por Género
+    generos_disponibles = sorted(df["genero"].dropna().unique())
+    sel_generos = st.multiselect(
+        "Género de Videojuego:",
+        options=generos_disponibles,
+        default=generos_disponibles
+    )
+
+    # 3. Filtro por Plataforma
+    plataformas_disponibles = sorted(df["plataforma"].dropna().unique())
+    sel_plataformas = st.multiselect(
+        "Plataforma:",
+        options=plataformas_disponibles,
+        default=plataformas_disponibles
+    )
+
+    # 4. Slider de Precio de Lanzamiento (USD)
+    min_prc = float(df["precio_lanzamiento_usd"].min())
+    max_prc = float(df["precio_lanzamiento_usd"].max())
+    sel_precio = st.slider(
+        "Precio de Lanzamiento (USD):",
+        min_value=min_prc,
+        max_value=max_prc,
+        value=(min_prc, max_prc),
+        step=5.0
+    )
+
+    # 5. Slider de Calificación Crítica
+    min_cal = int(df["calificacion_critica"].min())
+    max_cal = int(df["calificacion_critica"].max())
+    sel_calif = st.slider(
+        "Calificación de la Crítica (0-100 pts):",
+        min_value=min_cal,
+        max_value=max_cal,
+        value=(min_cal, max_cal),
+        step=1
+    )
 
 # Aplicar filtros
-df_filtered = df_all[
-    (df_all["Cluster_Nombre"].isin(sel_clusters)) &
-    (df_all["category"].isin(sel_categorias)) &
-    (df_all["sell_price"] >= sel_precio[0]) &
-    (df_all["sell_price"] <= sel_precio[1]) &
-    (df_all["rarity_tier"] >= sel_rareza[0]) &
-    (df_all["rarity_tier"] <= sel_rareza[1])
+df_filtro = df[
+    (df["Cluster_Nombre"].isin(sel_clusters)) &
+    (df["genero"].isin(sel_generos)) &
+    (df["plataforma"].isin(sel_plataformas)) &
+    (df["precio_lanzamiento_usd"] >= sel_precio[0]) &
+    (df["precio_lanzamiento_usd"] <= sel_precio[1]) &
+    (df["calificacion_critica"] >= sel_calif[0]) &
+    (df["calificacion_critica"] <= sel_calif[1])
 ]
 
-# CABECERA FORMAL
+# =============================================================================
+# CABECERA PRINCIPAL Y MÉTRICAS KPI EN TIEMPO REAL
+# =============================================================================
 st.markdown(f"""
-<div class='main-header'>
-    <div class='main-title'>
-        <span style='color:#38BDF8;'>{LUCIDE['layers']}</span>
-        <span>Hyrule Data Insights</span>
-    </div>
-    <div class='main-subtitle'>
-        Plataforma analítica de segmentación no supervisada mediante K-Means y auditoría multivariada
+<div class="main-header">
+    <h1 class="main-title">{LUCIDE['layers']} Gaming Sales Intelligence</h1>
+    <div class="main-subtitle">
+        Auditoría analítica y segmentación no supervisada K-Means | Rendimiento comercial físico vs. digital
     </div>
 </div>
 """, unsafe_allow_html=True)
 
-# CUATRO INDICADORES KPI RELEVANTES CON DIFUMINADO Y LUCIDE ICONS (Requerimiento Parte 6)
+# 4 Tarjetas KPI
 k1, k2, k3, k4 = st.columns(4)
+
+total_obs = len(df_filtro)
+total_universo = len(df)
+med_dig = df_filtro["ventas_digitales_millones"].mean() if total_obs > 0 else 0
+med_fis = df_filtro["ventas_fisicas_millones"].mean() if total_obs > 0 else 0
+prom_calif = df_filtro["calificacion_critica"].mean() if total_obs > 0 else 0
 
 with k1:
     st.markdown(f"""
-    <div class='kpi-container'>
-        <div class='kpi-header'>
-            <span class='kpi-label'>Total Observaciones</span>
-            <span class='kpi-icon'>{LUCIDE['layers']}</span>
+    <div class="kpi-container">
+        <div class="kpi-header">
+            <span class="kpi-label">Total Videojuegos</span>
+            <span class="kpi-icon">{LUCIDE['layers']}</span>
         </div>
-        <div class='kpi-number'>{len(df_filtered)} <span style='font-size:0.9rem; color:#64748B;'>/ {len(df_all)}</span></div>
-        <div class='kpi-detail'>Ítems analizados en catálogo</div>
+        <div class="kpi-number">{total_obs} <span style="font-size:0.95rem; font-weight:400; color:#64748B;">/ {total_universo}</span></div>
+        <div class="kpi-detail">Títulos activos tras aplicar filtros</div>
     </div>
     """, unsafe_allow_html=True)
 
 with k2:
-    mean_atk = df_filtered["attack_power"].mean() if len(df_filtered) > 0 else 0
     st.markdown(f"""
-    <div class='kpi-container'>
-        <div class='kpi-header'>
-            <span class='kpi-label'>Poder Ofensivo Promedio</span>
-            <span class='kpi-icon'>{LUCIDE['sword']}</span>
+    <div class="kpi-container">
+        <div class="kpi-header">
+            <span class="kpi-label">Venta Digital Media</span>
+            <span class="kpi-icon">{LUCIDE['download']}</span>
         </div>
-        <div class='kpi-number'>{mean_atk:.1f} <span style='font-size:0.9rem; color:#64748B;'>pts</span></div>
-        <div class='kpi-detail'>Capacidad de impacto en combate</div>
+        <div class="kpi-number">{med_dig:.2f} <span style="font-size:0.9rem; font-weight:500; color:#64748B;">M copias</span></div>
+        <div class="kpi-detail">Descargas digitales promedio por juego</div>
     </div>
     """, unsafe_allow_html=True)
 
 with k3:
-    med_dur = df_filtered["durability"].median() if len(df_filtered) > 0 else 0
     st.markdown(f"""
-    <div class='kpi-container'>
-        <div class='kpi-header'>
-            <span class='kpi-label'>Durabilidad Mediana</span>
-            <span class='kpi-icon'>{LUCIDE['clock']}</span>
+    <div class="kpi-container">
+        <div class="kpi-header">
+            <span class="kpi-label">Venta Física Media</span>
+            <span class="kpi-icon">{LUCIDE['disc']}</span>
         </div>
-        <div class='kpi-number'>{med_dur:.0f} <span style='font-size:0.9rem; color:#64748B;'>pts</span></div>
-        <div class='kpi-detail'>Resistencia y ciclo de vida</div>
+        <div class="kpi-number">{med_fis:.2f} <span style="font-size:0.9rem; font-weight:500; color:#64748B;">M copias</span></div>
+        <div class="kpi-detail">Discos y cartuchos físicos vendidos</div>
     </div>
     """, unsafe_allow_html=True)
 
 with k4:
-    mean_prc = df_filtered["sell_price"].mean() if len(df_filtered) > 0 else 0
     st.markdown(f"""
-    <div class='kpi-container'>
-        <div class='kpi-header'>
-            <span class='kpi-label'>Valoración Promedio</span>
-            <span class='kpi-icon'>{LUCIDE['coins']}</span>
+    <div class="kpi-container">
+        <div class="kpi-header">
+            <span class="kpi-label">Puntaje Crítica</span>
+            <span class="kpi-icon">{LUCIDE['award']}</span>
         </div>
-        <div class='kpi-number'>{mean_prc:.0f} <span style='font-size:0.9rem; color:#64748B;'>Rupias</span></div>
-        <div class='kpi-detail'>Precio medio en economía mercantil</div>
+        <div class="kpi-number">{prom_calif:.1f} <span style="font-size:0.9rem; font-weight:500; color:#64748B;">pts</span></div>
+        <div class="kpi-detail">Calificación promedio de la prensa especializada</div>
     </div>
     """, unsafe_allow_html=True)
 
-st.markdown("<br>", unsafe_allow_html=True)
+st.markdown("<div style='height: 20px;'></div>", unsafe_allow_html=True)
 
-if len(df_filtered) == 0:
-    st.info("No se hallaron registros que coincidan con los filtros aplicados. Modifique los parámetros en la barra lateral.")
-    st.stop()
+# Layout base oscuro formal para Plotly
+layout_theme = dict(
+    paper_bgcolor="rgba(0,0,0,0)",
+    plot_bgcolor="rgba(15, 23, 42, 0.4)",
+    font=dict(family="Plus Jakarta Sans, sans-serif", color="#CBD5E1", size=11),
+    title_font=dict(color="#F8FAFC", size=13, weight="bold"),
+    margin=dict(l=40, r=30, t=50, b=40),
+    xaxis=dict(gridcolor="rgba(148, 163, 184, 0.12)", zerolinecolor="rgba(148, 163, 184, 0.25)"),
+    yaxis=dict(gridcolor="rgba(148, 163, 184, 0.12)", zerolinecolor="rgba(148, 163, 184, 0.25)"),
+    legend=dict(font=dict(size=10), orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
+)
 
-# ==============================================================================
-# PÁGINA 1: ANÁLISIS GENERAL
-# ==============================================================================
-if pagina == "Análisis General":
+# =============================================================================
+# PÁGINA 1: ANÁLISIS GENERAL DE VENTAS FÍSICAS VS DIGITALES
+# =============================================================================
+if pagina == "Análisis General de Ventas":
     st.markdown(f"""
-    <div style='display:flex; align-items:center; gap:8px; margin-bottom:12px;'>
-        <span style='color:#38BDF8;'>{LUCIDE['chart_bar']}</span>
-        <h3 style='margin:0; font-size:1.25rem; font-weight:700; color:#F8FAFC;'>Página 1: Análisis General del Compendio</h3>
+    <div style="display:flex; align-items:center; gap:8px; margin-bottom:14px;">
+        <span style="color:#60A5FA;">{LUCIDE['chart_bar']}</span>
+        <h3 style="margin:0; font-size:1.25rem; font-weight:700; color:#F8FAFC;">Exploración Multivariada del Mercado de Videojuegos</h3>
     </div>
     """, unsafe_allow_html=True)
 
-    c1, c2 = st.columns(2)
-    with c1:
-        st.markdown(f"""
-        <div style='display:flex; align-items:center; gap:6px; margin-bottom:6px;'>
-            <span style='color:#94A3B8;'>{LUCIDE['sword']}</span>
-            <span style='font-weight:600; font-size:0.9rem; color:#E2E8F0;'>Distribución de Daño Ofensivo por Categoría</span>
-        </div>
-        """, unsafe_allow_html=True)
-        fig_hist = px.histogram(
-            df_filtered,
-            x="attack_power",
-            color="category",
-            nbins=28,
-            template="plotly_dark",
-            barmode="overlay",
-            opacity=0.75,
-            labels={"attack_power": "Poder de Ataque (Puntos)", "count": "Frecuencia"}
-        )
-        fig_hist.update_layout(
-            margin=dict(l=20, r=20, t=10, b=20),
-            paper_bgcolor="rgba(0,0,0,0)",
-            plot_bgcolor="rgba(0,0,0,0)",
-            legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1, font=dict(size=10))
-        )
-        st.plotly_chart(fig_hist, width="stretch")
+    if total_obs == 0:
+        st.warning("No hay registros que coincidan con los filtros seleccionados.")
+    else:
+        c_left, c_right = st.columns(2)
 
-    with c2:
-        st.markdown(f"""
-        <div style='display:flex; align-items:center; gap:6px; margin-bottom:6px;'>
-            <span style='color:#94A3B8;'>{LUCIDE['coins']}</span>
-            <span style='font-weight:600; font-size:0.9rem; color:#E2E8F0;'>Relación entre Durabilidad y Precio de Venta</span>
-        </div>
-        """, unsafe_allow_html=True)
-        fig_scatter_gen = px.scatter(
-            df_filtered,
-            x="durability",
-            y="sell_price",
-            color="category",
-            size="rarity_tier",
-            hover_name="item_name",
-            hover_data=["origin_region", "attack_power", "defense_power"],
-            template="plotly_dark",
-            labels={"durability": "Durabilidad / HP", "sell_price": "Precio (Rupias)"}
-        )
-        fig_scatter_gen.update_layout(
-            margin=dict(l=20, r=20, t=10, b=20),
-            paper_bgcolor="rgba(0,0,0,0)",
-            plot_bgcolor="rgba(0,0,0,0)",
-            legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1, font=dict(size=10))
-        )
-        st.plotly_chart(fig_scatter_gen, width="stretch")
+        # Gráfica 1: Dispersión Ventas Físicas vs Ventas Digitales
+        with c_left:
+            fig_disp = px.scatter(
+                df_filtro,
+                x="ventas_fisicas_millones",
+                y="ventas_digitales_millones",
+                color="genero",
+                size="calificacion_critica",
+                hover_data=["titulo", "plataforma", "ventas_totales_millones", "precio_lanzamiento_usd"],
+                title="Relación entre Ventas Físicas y Ventas Digitales",
+                labels={
+                    "ventas_fisicas_millones": "Ventas Físicas (Millones de copias)",
+                    "ventas_digitales_millones": "Ventas Digitales (Millones de copias)",
+                    "genero": "Género"
+                }
+            )
+            fig_disp.update_layout(**layout_theme)
+            st.plotly_chart(fig_disp, width="stretch")
 
-    c3, c4 = st.columns(2)
-    with c3:
-        st.markdown(f"""
-        <div style='display:flex; align-items:center; gap:6px; margin-bottom:6px;'>
-            <span style='color:#94A3B8;'>{LUCIDE['compass']}</span>
-            <span style='font-weight:600; font-size:0.9rem; color:#E2E8F0;'>Distribución Geográfica de Ítems por Región</span>
-        </div>
-        """, unsafe_allow_html=True)
-        reg_df = df_filtered["origin_region"].value_counts().reset_index()
-        reg_df.columns = ["Región", "Registros"]
-        fig_reg = px.bar(
-            reg_df,
-            x="Registros",
-            y="Región",
-            orientation="h",
-            color="Registros",
-            color_continuous_scale="Blues",
-            template="plotly_dark"
-        )
-        fig_reg.update_layout(
-            margin=dict(l=20, r=20, t=10, b=20),
-            paper_bgcolor="rgba(0,0,0,0)",
-            plot_bgcolor="rgba(0,0,0,0)",
-            coloraxis_showscale=False
-        )
-        st.plotly_chart(fig_reg, width="stretch")
+        # Gráfica 2: Histograma de Ventas Totales por Género
+        with c_right:
+            fig_hist = px.histogram(
+                df_filtro,
+                x="ventas_totales_millones",
+                color="genero",
+                nbins=25,
+                title="Distribución de Ventas Totales por Género de Videojuego",
+                labels={
+                    "ventas_totales_millones": "Ventas Totales Globales (Millones de copias)",
+                    "count": "Cantidad de Títulos"
+                }
+            )
+            fig_hist.update_layout(**layout_theme)
+            st.plotly_chart(fig_hist, width="stretch")
 
-    with c4:
-        st.markdown(f"""
-        <div style='display:flex; align-items:center; gap:6px; margin-bottom:6px;'>
-            <span style='color:#94A3B8;'>{LUCIDE['scatter']}</span>
-            <span style='font-weight:600; font-size:0.9rem; color:#E2E8F0;'>Matriz de Correlación Numérica de Atributos</span>
-        </div>
-        """, unsafe_allow_html=True)
-        corr_cols = ["attack_power", "defense_power", "durability", "sell_price", "rarity_tier"]
-        corr_df = df_filtered[corr_cols].corr()
-        fig_corr = px.imshow(
-            corr_df,
-            text_auto=".2f",
-            color_continuous_scale="Blues",
-            template="plotly_dark",
-            aspect="auto"
-        )
-        fig_corr.update_layout(
-            margin=dict(l=20, r=20, t=10, b=20),
-            paper_bgcolor="rgba(0,0,0,0)",
-            plot_bgcolor="rgba(0,0,0,0)"
-        )
-        st.plotly_chart(fig_corr, width="stretch")
+        c_bar, c_heat = st.columns(2)
 
-    st.markdown(f"""
-    <div style='display:flex; align-items:center; gap:6px; margin-top:16px; margin-bottom:8px;'>
-        <span style='color:#94A3B8;'>{LUCIDE['layers']}</span>
-        <span style='font-weight:600; font-size:0.95rem; color:#E2E8F0;'>Catálogo de Datos Tabular</span>
-    </div>
-    """, unsafe_allow_html=True)
-    st.dataframe(
-        df_filtered[["item_id", "item_name", "category", "subcategory", "attack_power", "defense_power", "durability", "sell_price", "rarity_tier", "origin_region"]],
-        width="stretch",
-        height=260
-    )
+        # Gráfica 3: Ventas por Plataforma
+        with c_bar:
+            plat_counts = df_filtro.groupby("plataforma")["ventas_totales_millones"].sum().reset_index()
+            plat_counts = plat_counts.sort_values(by="ventas_totales_millones", ascending=True)
 
-# ==============================================================================
-# PÁGINA 2: SEGMENTACIÓN K-MEANS
-# ==============================================================================
+            fig_bar = px.bar(
+                plat_counts,
+                x="ventas_totales_millones",
+                y="plataforma",
+                orientation="h",
+                title="Volumen Total de Ventas por Plataforma de Videojuegos",
+                labels={"ventas_totales_millones": "Millones de Copias Vendidas", "plataforma": "Plataforma"},
+                color="ventas_totales_millones",
+                color_continuous_scale="Blues"
+            )
+            fig_bar.update_layout(**layout_theme)
+            fig_bar.update_coloraxes(showscale=False)
+            st.plotly_chart(fig_bar, width="stretch")
+
+        # Gráfica 4: Matriz de Correlación Numérica (Heatmap)
+        with c_heat:
+            cols_corr = ["ventas_fisicas_millones", "ventas_digitales_millones", "precio_lanzamiento_usd", "calificacion_critica", "horas_juego"]
+            corr_mat = df_filtro[cols_corr].corr().round(2)
+
+            fig_heat = px.imshow(
+                corr_mat,
+                text_auto=True,
+                title="Matriz de Correlación Multivariada de Atributos",
+                color_continuous_scale="RdBu_r",
+                zmin=-1, zmax=1
+            )
+            fig_heat.update_layout(**layout_theme)
+            fig_heat.update_coloraxes(showscale=False)
+            st.plotly_chart(fig_heat, width="stretch")
+
+# =============================================================================
+# PÁGINA 2: SEGMENTACIÓN K-MEANS Y ARQUETIPOS DE NEGOCIO
+# =============================================================================
 else:
     st.markdown(f"""
-    <div style='display:flex; align-items:center; gap:8px; margin-bottom:12px;'>
-        <span style='color:#38BDF8;'>{LUCIDE['cpu']}</span>
-        <h3 style='margin:0; font-size:1.25rem; font-weight:700; color:#F8FAFC;'>Página 2: Segmentación y Clústeres K-Means</h3>
+    <div style="display:flex; align-items:center; gap:8px; margin-bottom:14px;">
+        <span style="color:#60A5FA;">{LUCIDE['pie_chart']}</span>
+        <h3 style="margin:0; font-size:1.25rem; font-weight:700; color:#F8FAFC;">Segmentación no Supervisada: Descubrimiento de Clústeres (K=4)</h3>
     </div>
     """, unsafe_allow_html=True)
 
-    # 1. Gráfica de distribución de registros por clúster (Requerimiento)
-    # 2. Gráfica de dispersión para visualizar agrupamientos (Requerimiento)
-    col_dist, col_scat = st.columns([1, 2])
+    if total_obs == 0:
+        st.warning("No hay registros que coincidan con los filtros seleccionados.")
+    else:
+        # Fila 1: Dona de Proporción y Proyección PCA 2D
+        c_pie, c_pca = st.columns([1, 1.4])
 
-    with col_dist:
+        with c_pie:
+            cluster_dist = df_filtro["Cluster_Nombre"].value_counts().reset_index()
+            cluster_dist.columns = ["Cluster_Nombre", "conteo"]
+
+            fig_pie = px.pie(
+                cluster_dist,
+                names="Cluster_Nombre",
+                values="conteo",
+                hole=0.6,
+                title="Proporción de Catálogo por Clúster",
+                color="Cluster_Nombre",
+                color_discrete_map=PALETA_CLUSTERS
+            )
+            fig_pie.update_layout(**layout_theme)
+            fig_pie.update_traces(textposition="inside", textinfo="percent")
+            st.plotly_chart(fig_pie, width="stretch")
+
+        with c_pca:
+            fig_pca = px.scatter(
+                df_filtro,
+                x="pca_x",
+                y="pca_y",
+                color="Cluster_Nombre",
+                hover_data=["titulo", "ventas_totales_millones", "calificacion_critica"],
+                title="Proyección de Clústeres (PCA 2D - 75.2% Varianza Explicada)",
+                labels={
+                    "pca_x": "Componente Principal 1 (Volumen de Ventas y Calificación)",
+                    "pca_y": "Componente Principal 2 (Preferencia Digital vs. Físico)",
+                    "Cluster_Nombre": "Clúster"
+                },
+                color_discrete_map=PALETA_CLUSTERS
+            )
+            fig_pca.update_layout(**layout_theme)
+            st.plotly_chart(fig_pca, width="stretch")
+
+        # Fila 2: Dos Gráficas Adicionales comparativas
+        st.markdown("<hr style='border:none; border-top:1px solid rgba(148,163,184,0.12); margin:18px 0;'>", unsafe_allow_html=True)
         st.markdown(f"""
-        <div style='display:flex; align-items:center; gap:6px; margin-bottom:6px;'>
-            <span style='color:#94A3B8;'>{LUCIDE['pie_chart']}</span>
-            <span style='font-weight:600; font-size:0.9rem; color:#E2E8F0;'>Proporción por Clúster</span>
-        </div>
-        """, unsafe_allow_html=True)
-        cluster_counts = df_filtered["Cluster_Nombre"].value_counts().reset_index()
-        cluster_counts.columns = ["Clúster", "Cantidad"]
-        fig_donut = px.pie(
-            cluster_counts,
-            names="Clúster",
-            values="Cantidad",
-            color="Clúster",
-            color_discrete_map=FORMAL_CLUSTER_PALETTE,
-            hole=0.55,
-            template="plotly_dark"
-        )
-        fig_donut.update_traces(textposition='inside', textinfo='percent')
-        fig_donut.update_layout(
-            margin=dict(l=10, r=10, t=10, b=10),
-            paper_bgcolor="rgba(0,0,0,0)",
-            plot_bgcolor="rgba(0,0,0,0)",
-            legend=dict(orientation="h", yanchor="bottom", y=-0.25, xanchor="center", x=0.5, font=dict(size=9))
-        )
-        st.plotly_chart(fig_donut, width="stretch")
-
-    with col_scat:
-        st.markdown(f"""
-        <div style='display:flex; align-items:center; gap:6px; margin-bottom:6px;'>
-            <span style='color:#94A3B8;'>{LUCIDE['scatter']}</span>
-            <span style='font-weight:600; font-size:0.9rem; color:#E2E8F0;'>Proyección de Clústeres (PCA 2D - 70.8% Varianza Explicada)</span>
-        </div>
-        """, unsafe_allow_html=True)
-        fig_pca = px.scatter(
-            df_filtered,
-            x="pca_x",
-            y="pca_y",
-            color="Cluster_Nombre",
-            color_discrete_map=FORMAL_CLUSTER_PALETTE,
-            hover_name="item_name",
-            hover_data=["category", "attack_power", "defense_power", "durability", "sell_price"],
-            labels={"pca_x": "Componente Principal 1 (Daño Ofensivo)", "pca_y": "Componente Principal 2 (Blindaje y Precio)"},
-            template="plotly_dark",
-            opacity=0.8
-        )
-        fig_pca.update_layout(
-            margin=dict(l=10, r=10, t=10, b=10),
-            paper_bgcolor="rgba(0,0,0,0)",
-            plot_bgcolor="rgba(0,0,0,0)",
-            legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1, font=dict(size=9))
-        )
-        st.plotly_chart(fig_pca, width="stretch")
-
-    # DOS GRÁFICAS ADICIONALES PARA COMPARAR CARACTERÍSTICAS (Requerimiento Parte 6)
-    st.markdown("<br>", unsafe_allow_html=True)
-    st.markdown(f"""
-    <div style='display:flex; align-items:center; gap:6px; margin-bottom:8px;'>
-        <span style='color:#38BDF8;'>{LUCIDE['chart_bar']}</span>
-        <span style='font-weight:700; font-size:1.05rem; color:#F8FAFC;'>Comparación Multidimensional entre Clústeres</span>
-    </div>
-    """, unsafe_allow_html=True)
-
-    g1, g2 = st.columns(2)
-    with g1:
-        st.markdown(f"""
-        <div style='display:flex; align-items:center; gap:6px; margin-bottom:4px;'>
-            <span style='color:#94A3B8;'>{LUCIDE['sword']}</span>
-            <span style='font-weight:600; font-size:0.88rem; color:#CBD5E1;'>Gráfica Adicional 1: Dispersión del Poder Ofensivo</span>
-        </div>
-        """, unsafe_allow_html=True)
-        fig_box = px.box(
-            df_filtered,
-            x="Cluster_Nombre",
-            y="attack_power",
-            color="Cluster_Nombre",
-            color_discrete_map=FORMAL_CLUSTER_PALETTE,
-            template="plotly_dark",
-            labels={"Cluster_Nombre": "Clúster", "attack_power": "Poder de Ataque"}
-        )
-        fig_box.update_layout(
-            showlegend=False,
-            margin=dict(l=10, r=10, t=10, b=10),
-            paper_bgcolor="rgba(0,0,0,0)",
-            plot_bgcolor="rgba(0,0,0,0)",
-            xaxis_tickangle=-15
-        )
-        st.plotly_chart(fig_box, width="stretch")
-
-    with g2:
-        st.markdown(f"""
-        <div style='display:flex; align-items:center; gap:6px; margin-bottom:4px;'>
-            <span style='color:#94A3B8;'>{LUCIDE['coins']}</span>
-            <span style='font-weight:600; font-size:0.88rem; color:#CBD5E1;'>Gráfica Adicional 2: Relación Ataque vs Precio en Rupias</span>
-        </div>
-        """, unsafe_allow_html=True)
-        fig_scat_prc = px.scatter(
-            df_filtered,
-            x="attack_power",
-            y="sell_price",
-            color="Cluster_Nombre",
-            color_discrete_map=FORMAL_CLUSTER_PALETTE,
-            size="rarity_tier",
-            hover_name="item_name",
-            template="plotly_dark",
-            labels={"attack_power": "Poder de Ataque", "sell_price": "Precio (Rupias)"}
-        )
-        fig_scat_prc.update_layout(
-            margin=dict(l=10, r=10, t=10, b=10),
-            paper_bgcolor="rgba(0,0,0,0)",
-            plot_bgcolor="rgba(0,0,0,0)",
-            legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1, font=dict(size=9))
-        )
-        st.plotly_chart(fig_scat_prc, width="stretch")
-
-    # TABLA CON ESTADÍSTICAS DESCRIPTIVAS DE LOS CLÚSTERES (Requerimiento Parte 6)
-    st.markdown(f"""
-    <div style='display:flex; align-items:center; gap:6px; margin-top:16px; margin-bottom:8px;'>
-        <span style='color:#38BDF8;'>{LUCIDE['layers']}</span>
-        <span style='font-weight:700; font-size:1.05rem; color:#F8FAFC;'>Estadísticas Descriptivas por Clúster</span>
-    </div>
-    """, unsafe_allow_html=True)
-    features_stats = ["attack_power", "defense_power", "durability", "sell_price", "rarity_tier"]
-    stats_table = df_filtered.groupby("Cluster_Nombre")[features_stats].agg(["mean", "median", "std"]).round(1)
-    st.dataframe(stats_table, width="stretch")
-
-    # SECCIÓN CON LA DESCRIPCIÓN DE LOS GRUPOS IDENTIFICADOS (Requerimiento Parte 6)
-    st.markdown("<br>", unsafe_allow_html=True)
-    st.markdown(f"""
-    <div style='display:flex; align-items:center; gap:6px; margin-bottom:12px;'>
-        <span style='color:#38BDF8;'>{LUCIDE['shield']}</span>
-        <span style='font-weight:700; font-size:1.05rem; color:#F8FAFC;'>Descripción de los Grupos Identificados</span>
-    </div>
-    """, unsafe_allow_html=True)
-
-    d1, d2 = st.columns(2)
-    with d1:
-        st.markdown(f"""
-        <div class='cluster-profile-card' style='border-left-color: #E11D48;'>
-            <div class='cluster-title'>
-                <span style='color:#E11D48;'>{LUCIDE['sword']}</span>
-                <span>Arsenal Ofensivo y Armas de Asalto</span>
-            </div>
-            <p class='cluster-desc'>
-                <b>Perfil Cuantitativo:</b> Ataque elevado (media 47.8 pts), defensa nula (0.7 pts), durabilidad media (57.7 pts) y coste de 571 Rupias.<br>
-                <b>Función Táctica:</b> Concentra espadas, mandobles, lanzas de combate y arcos de repetición destinados a infligir daño activo inmediato en combate.
-            </p>
-            <span class='cluster-tag'>Población: 432 ítems (45.6%)</span>
-        </div>
-
-        <div class='cluster-profile-card' style='border-left-color: #059669;'>
-            <div class='cluster-title'>
-                <span style='color:#059669;'>{LUCIDE['layers']}</span>
-                <span>Recursos Básicos, Forraje y Consumibles</span>
-            </div>
-            <p class='cluster-desc'>
-                <b>Perfil Cuantitativo:</b> Ataque bajo (media 8.1 pts), defensa reducida (5.0 pts), durabilidad mínima (33.1 pts) y coste de 134 Rupias.<br>
-                <b>Función Táctica:</b> Setas, hierbas, frutas, elixires, recetas de sustento y botín común. Base fundamental de forrajeo y supervivencia.
-            </p>
-            <span class='cluster-tag'>Población: 344 ítems (36.3%)</span>
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+            <span style="color:#60A5FA;">{LUCIDE['chart_bar']}</span>
+            <h4 style="margin:0; font-size:1.1rem; font-weight:700; color:#F8FAFC;">Comparación Multidimensional entre Clústeres</h4>
         </div>
         """, unsafe_allow_html=True)
 
-    with d2:
-        st.markdown(f"""
-        <div class='cluster-profile-card' style='border-left-color: #2563EB;'>
-            <div class='cluster-title'>
-                <span style='color:#2563EB;'>{LUCIDE['shield']}</span>
-                <span>Blindaje Táctico, Armaduras y Escudos</span>
-            </div>
-            <p class='cluster-desc'>
-                <b>Perfil Cuantitativo:</b> Ataque casi nulo (1.1 pts), máxima absorción defensiva (media 43.1 pts), durabilidad destacada (104.7 pts) y precio elevado (1,433 Rupias).<br>
-                <b>Función Táctica:</b> Escudos metálicos pesados y armaduras de Gran Hada orientados a mitigar impactos y ejecutar parry.
-            </p>
-            <span class='cluster-tag'>Población: 138 ítems (14.6%)</span>
-        </div>
+        c_box, c_scat2 = st.columns(2)
 
-        <div class='cluster-profile-card' style='border-left-color: #D97706;'>
-            <div class='cluster-title'>
-                <span style='color:#D97706;'>{LUCIDE['award']}</span>
-                <span>Jefes Supremos, Calamidades y Reliquias Míticas</span>
-            </div>
-            <p class='cluster-desc'>
-                <b>Perfil Cuantitativo:</b> Máximo poder de daño (75.7 pts), alta defensa (47.2 pts), colosal durabilidad de combate (706.2 pts) y rareza Tier 5.<br>
-                <b>Función Táctica:</b> Representa jefes de campo (Lynels Plateados/Dorados, Calamity Ganon, Molduras) y equipamiento de élite absoluto.
-            </p>
-            <span class='cluster-tag'>Población: 33 ítems (3.5%)</span>
-        </div>
-        """, unsafe_allow_html=True)
+        # Gráfica Adicional 1: Boxplot de Ventas Totales por Clúster
+        with c_box:
+            st.markdown(f"<div style='font-size:0.88rem; font-weight:600; color:#94A3B8; margin-bottom:6px;'>{LUCIDE['chart_bar']} Gráfica Adicional 1: Dispersión de Ventas Totales</div>", unsafe_allow_html=True)
+            fig_box = px.box(
+                df_filtro,
+                x="Cluster_Nombre",
+                y="ventas_totales_millones",
+                color="Cluster_Nombre",
+                color_discrete_map=PALETA_CLUSTERS,
+                labels={"Cluster_Nombre": "Clúster", "ventas_totales_millones": "Ventas Totales (Millones de Copias)"}
+            )
+            fig_box.update_layout(**layout_theme)
+            fig_box.update_layout(showlegend=False)
+            st.plotly_chart(fig_box, width="stretch")
 
-    # SECCIÓN CON LOS PRINCIPALES HALLAZGOS Y RECOMENDACIONES (Requerimiento Parte 6)
-    st.markdown("<br>", unsafe_allow_html=True)
-    h1, h2 = st.columns(2)
+        # Gráfica Adicional 2: Dispersión Ventas vs Calificación Crítica
+        with c_scat2:
+            st.markdown(f"<div style='font-size:0.88rem; font-weight:600; color:#94A3B8; margin-bottom:6px;'>{LUCIDE['scatter']} Gráfica Adicional 2: Relación Ventas Totales vs. Calificación</div>", unsafe_allow_html=True)
+            fig_scat2 = px.scatter(
+                df_filtro,
+                x="calificacion_critica",
+                y="ventas_totales_millones",
+                color="Cluster_Nombre",
+                size="precio_lanzamiento_usd",
+                color_discrete_map=PALETA_CLUSTERS,
+                hover_data=["titulo", "plataforma", "genero"],
+                labels={"calificacion_critica": "Calificación Metacritic (Puntos)", "ventas_totales_millones": "Ventas Totales (Millones)"}
+            )
+            fig_scat2.update_layout(**layout_theme)
+            st.plotly_chart(fig_scat2, width="stretch")
 
-    with h1:
-        st.markdown(f"""
-        <div style='display:flex; align-items:center; gap:6px; margin-bottom:8px;'>
-            <span style='color:#38BDF8;'>{LUCIDE['info']}</span>
-            <span style='font-weight:700; font-size:1rem; color:#F8FAFC;'>Hallazgos Principales del Modelo</span>
-        </div>
-        <div class='insight-box'>
-            <div class='insight-bullet'>
-                <span style='color:#60A5FA; margin-top:2px;'>{LUCIDE['check_circle']}</span>
-                <span><b>Polarización Ofensiva-Defensiva Binaria:</b> No existen ítems equilibrados en daño y protección; el catálogo obliga a alternar roles activos de ataque y defensa.</span>
-            </div>
-            <div class='insight-bullet'>
-                <span style='color:#60A5FA; margin-top:2px;'>{LUCIDE['check_circle']}</span>
-                <span><b>Asimetría Comercial de la Protección:</b> El blindaje pasivo tiene un coste casi tres veces superior al de las armas ofensivas (1,433 vs 571 Rupias).</span>
-            </div>
-            <div class='insight-bullet'>
-                <span style='color:#60A5FA; margin-top:2px;'>{LUCIDE['check_circle']}</span>
-                <span><b>Concentración Extrema de Dificultad:</b> El Clúster 3 comprende solo el 3.5% del juego pero posee 12 veces más vida útil que el resto de las entidades.</span>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-
-    with h2:
-        st.markdown(f"""
-        <div style='display:flex; align-items:center; gap:6px; margin-bottom:8px;'>
-            <span style='color:#10B981;'>{LUCIDE['check_circle']}</span>
-            <span style='font-weight:700; font-size:1rem; color:#F8FAFC;'>Recomendaciones Estratégicas</span>
-        </div>
-        <div class='insight-box'>
-            <div class='insight-bullet'>
-                <span style='color:#10B981; margin-top:2px;'>{LUCIDE['check_circle']}</span>
-                <span><b>Configuración de Inventario:</b> Priorizar un ratio de ranuras 60% Armamento de Asalto, 25% Blindaje Táctico y 15% Recursos Potenciadores.</span>
-            </div>
-            <div class='insight-bullet'>
-                <span style='color:#10B981; margin-top:2px;'>{LUCIDE['check_circle']}</span>
-                <span><b>Balance de Economía de Juego:</b> Ajustar al alza el precio de venta de las espadas de élite para reducir la brecha comercial frente a armaduras.</span>
-            </div>
-            <div class='insight-bullet'>
-                <span style='color:#10B981; margin-top:2px;'>{LUCIDE['check_circle']}</span>
-                <span><b>Curva de Progresión Escalonada:</b> Diseñar entidades intermedias (200-350 HP) para suavizar la dificultad previa a los Jefes de Calamidad.</span>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-
-st.markdown("<br><hr style='border-color: rgba(148, 163, 184, 0.1); margin-top: 20px; margin-bottom: 12px;'>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center; color: #64748B; font-size: 0.8rem; margin:0;'>Proyecto Integrador de Minería de Datos | Segmentación K-Means | The Legend of Zelda Universe</p>", unsafe_allow_html=True)
+# =============================================================================
+# TABLA DE AUDITORÍA DE DATOS
+# =============================================================================
+st.markdown("<hr style='border:none; border-top:1px solid rgba(148,163,184,0.12); margin:24px 0 16px 0;'>", unsafe_allow_html=True)
+with st.expander("Inspeccionar Catálogo Completo de Videojuegos Filtrados", expanded=False):
+    st.dataframe(
+        df_filtro[[
+            "id_juego", "titulo", "genero", "plataforma", "distribuidora",
+            "ventas_fisicas_millones", "ventas_digitales_millones", "ventas_totales_millones",
+            "precio_lanzamiento_usd", "calificacion_critica", "horas_juego", "Cluster_Nombre"
+        ]],
+        width="stretch",
+        height=320
+    )
