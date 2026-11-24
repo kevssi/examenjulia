@@ -385,7 +385,7 @@ if pagina == "Análisis General":
             plot_bgcolor="rgba(0,0,0,0)",
             legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1, font=dict(size=10))
         )
-        st.plotly_chart(fig_hist, use_container_width=True)
+        st.plotly_chart(fig_hist, width="stretch")
 
     with c2:
         st.markdown(f"""
@@ -411,7 +411,7 @@ if pagina == "Análisis General":
             plot_bgcolor="rgba(0,0,0,0)",
             legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1, font=dict(size=10))
         )
-        st.plotly_chart(fig_scatter_gen, use_container_width=True)
+        st.plotly_chart(fig_scatter_gen, width="stretch")
 
     c3, c4 = st.columns(2)
     with c3:
@@ -438,7 +438,7 @@ if pagina == "Análisis General":
             plot_bgcolor="rgba(0,0,0,0)",
             coloraxis_showscale=False
         )
-        st.plotly_chart(fig_reg, use_container_width=True)
+        st.plotly_chart(fig_reg, width="stretch")
 
     with c4:
         st.markdown(f"""
@@ -461,7 +461,7 @@ if pagina == "Análisis General":
             paper_bgcolor="rgba(0,0,0,0)",
             plot_bgcolor="rgba(0,0,0,0)"
         )
-        st.plotly_chart(fig_corr, use_container_width=True)
+        st.plotly_chart(fig_corr, width="stretch")
 
     st.markdown(f"""
     <div style='display:flex; align-items:center; gap:6px; margin-top:16px; margin-bottom:8px;'>
@@ -471,7 +471,7 @@ if pagina == "Análisis General":
     """, unsafe_allow_html=True)
     st.dataframe(
         df_filtered[["item_id", "item_name", "category", "subcategory", "attack_power", "defense_power", "durability", "sell_price", "rarity_tier", "origin_region"]],
-        use_container_width=True,
+        width="stretch",
         height=260
     )
 
@@ -515,7 +515,7 @@ else:
             plot_bgcolor="rgba(0,0,0,0)",
             legend=dict(orientation="h", yanchor="bottom", y=-0.25, xanchor="center", x=0.5, font=dict(size=9))
         )
-        st.plotly_chart(fig_donut, use_container_width=True)
+        st.plotly_chart(fig_donut, width="stretch")
 
     with col_scat:
         st.markdown(f"""
@@ -542,7 +542,7 @@ else:
             plot_bgcolor="rgba(0,0,0,0)",
             legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1, font=dict(size=9))
         )
-        st.plotly_chart(fig_pca, use_container_width=True)
+        st.plotly_chart(fig_pca, width="stretch")
 
     # DOS GRÁFICAS ADICIONALES PARA COMPARAR CARACTERÍSTICAS (Requerimiento Parte 6)
     st.markdown("<br>", unsafe_allow_html=True)
@@ -577,7 +577,7 @@ else:
             plot_bgcolor="rgba(0,0,0,0)",
             xaxis_tickangle=-15
         )
-        st.plotly_chart(fig_box, use_container_width=True)
+        st.plotly_chart(fig_box, width="stretch")
 
     with g2:
         st.markdown(f"""
@@ -603,7 +603,7 @@ else:
             plot_bgcolor="rgba(0,0,0,0)",
             legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1, font=dict(size=9))
         )
-        st.plotly_chart(fig_scat_prc, use_container_width=True)
+        st.plotly_chart(fig_scat_prc, width="stretch")
 
     # TABLA CON ESTADÍSTICAS DESCRIPTIVAS DE LOS CLÚSTERES (Requerimiento Parte 6)
     st.markdown(f"""
@@ -614,7 +614,7 @@ else:
     """, unsafe_allow_html=True)
     features_stats = ["attack_power", "defense_power", "durability", "sell_price", "rarity_tier"]
     stats_table = df_filtered.groupby("Cluster_Nombre")[features_stats].agg(["mean", "median", "std"]).round(1)
-    st.dataframe(stats_table, use_container_width=True)
+    st.dataframe(stats_table, width="stretch")
 
     # SECCIÓN CON LA DESCRIPCIÓN DE LOS GRUPOS IDENTIFICADOS (Requerimiento Parte 6)
     st.markdown("<br>", unsafe_allow_html=True)
