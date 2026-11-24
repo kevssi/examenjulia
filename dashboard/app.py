@@ -1,7 +1,7 @@
 """
 GAMING SALES INTELLIGENCE: DASHBOARD ANALÍTICO EJECUTIVO
 Segmentación Multivariada mediante K-Means | Mercado de Videojuegos Físicos vs. Digitales
-Diseño Formal, Difuminados Glassmorphism e Iconografía Lucide (Sin emojis)
+Diseño Formal, Alto Contraste, Difuminados Glassmorphism e Iconografía Lucide (Sin emojis)
 """
 
 import os
@@ -29,11 +29,10 @@ LUCIDE = {
     "pie_chart": '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>',
     "scatter": '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"></circle><circle cx="18.5" cy="5.5" r=".5" fill="currentColor"></circle><circle cx="11.5" cy="11.5" r=".5" fill="currentColor"></circle><circle cx="7.5" cy="16.5" r=".5" fill="currentColor"></circle><circle cx="17.5" cy="14.5" r=".5" fill="currentColor"></circle></svg>',
     "cpu": '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="14" x2="23" y2="14"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="14" x2="4" y2="14"></line></svg>',
-    "info": '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>',
-    "trending": '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>'
+    "check": '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>'
 }
 
-# ESTILOS CSS FORMALES CON DIFUMINADOS Y GLASSMORPHISM (Sin emojis)
+# ESTILOS CSS DE ALTO CONTRASTE Y LEGIBILIDAD
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
@@ -44,46 +43,46 @@ st.markdown("""
 
     /* Fondo formal con difuminado suave */
     .stApp {
-        background: radial-gradient(circle at 10% 20%, rgba(30, 41, 59, 0.4) 0%, rgba(15, 23, 42, 1) 90%);
+        background: radial-gradient(circle at 10% 20%, rgba(30, 41, 59, 0.5) 0%, rgba(15, 23, 42, 1) 90%);
         color: #F8FAFC;
     }
 
     /* Cabecera Principal */
     .main-header {
         padding: 6px 0 16px 0;
-        border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+        border-bottom: 1px solid rgba(148, 163, 184, 0.2);
         margin-bottom: 22px;
     }
     .main-title {
-        font-size: 1.85rem;
+        font-size: 1.95rem;
         font-weight: 800;
         letter-spacing: -0.02em;
-        color: #F8FAFC;
+        color: #FFFFFF;
         margin: 0;
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 12px;
     }
     .main-subtitle {
         font-size: 0.95rem;
-        color: #94A3B8;
-        font-weight: 400;
-        margin-top: 4px;
+        color: #CBD5E1;
+        font-weight: 500;
+        margin-top: 6px;
     }
 
-    /* Tarjetas KPI con difuminado (Glassmorphism formal) */
+    /* Tarjetas KPI con difuminado y alto contraste */
     .kpi-container {
-        background: linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.75) 100%);
+        background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%);
         backdrop-filter: blur(14px);
         -webkit-backdrop-filter: blur(14px);
-        border: 1px solid rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.14);
         border-radius: 12px;
         padding: 16px 20px;
-        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.25), 0 0 15px rgba(59, 130, 246, 0.03);
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.35);
         transition: transform 0.2s ease, border-color 0.2s ease;
     }
     .kpi-container:hover {
-        border-color: rgba(99, 102, 241, 0.3);
+        border-color: rgba(96, 165, 250, 0.45);
     }
     .kpi-header {
         display: flex;
@@ -92,10 +91,10 @@ st.markdown("""
         margin-bottom: 8px;
     }
     .kpi-label {
-        font-size: 0.75rem;
-        font-weight: 600;
+        font-size: 0.76rem;
+        font-weight: 700;
         text-transform: uppercase;
-        letter-spacing: 0.06em;
+        letter-spacing: 0.07em;
         color: #94A3B8;
     }
     .kpi-icon {
@@ -104,57 +103,72 @@ st.markdown("""
         align-items: center;
     }
     .kpi-number {
-        font-size: 1.65rem;
-        font-weight: 700;
-        color: #F8FAFC;
+        font-size: 1.75rem;
+        font-weight: 800;
+        color: #FFFFFF;
         letter-spacing: -0.01em;
         line-height: 1.2;
     }
     .kpi-detail {
         font-size: 0.78rem;
-        color: #64748B;
+        color: #CBD5E1;
+        margin-top: 5px;
+    }
+
+    /* CORRECCIÓN DE CONTRASTE TOTAL EN BARRA LATERAL */
+    [data-testid="stSidebar"] {
+        background: linear-gradient(180deg, #0B1120 0%, #172033 100%) !important;
+        border-right: 1px solid rgba(148, 163, 184, 0.2) !important;
+    }
+    [data-testid="stSidebar"] label,
+    [data-testid="stSidebar"] p,
+    [data-testid="stSidebar"] span {
+        color: #FFFFFF !important;
+        font-weight: 600 !important;
+        font-size: 0.88rem !important;
+    }
+    [data-testid="stSidebar"] .stRadio label {
+        color: #F1F5F9 !important;
+        font-size: 0.92rem !important;
+        font-weight: 500 !important;
+    }
+    [data-testid="stSidebar"] .stSlider div[data-testid="stMarkdownContainer"] p {
+        color: #F8FAFC !important;
+        font-weight: 600 !important;
+    }
+    [data-testid="stSidebar"] .stSlider div[data-baseweb="slider"] {
         margin-top: 4px;
     }
-
-    /* Tarjetas de Clúster Resumen */
-    .cluster-summary-card {
-        background: rgba(30, 41, 59, 0.45);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.06);
-        border-radius: 10px;
-        padding: 14px 18px;
-        margin-bottom: 14px;
-    }
-    .cluster-summary-title {
-        font-size: 0.95rem;
-        font-weight: 700;
-        margin-bottom: 6px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
+    [data-testid="stSidebar"] .stSlider span {
+        color: #CBD5E1 !important;
+        font-weight: 600 !important;
     }
 
-    /* Barra lateral */
-    [data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #0F172A 0%, #1E293B 100%) !important;
-        border-right: 1px solid rgba(148, 163, 184, 0.12) !important;
+    /* Tags del Multiselect con colores contrastados */
+    [data-baseweb="tag"] {
+        background-color: #1E293B !important;
+        border: 1px solid #3B82F6 !important;
+        border-radius: 6px !important;
+    }
+    [data-baseweb="tag"] span {
+        color: #FFFFFF !important;
+        font-weight: 600 !important;
     }
 </style>
 """, unsafe_allow_html=True)
 
-# Paleta formal corporativa para clústeres
+# 4 COLORES CORPORATIVOS VIVOS DE ALTO CONTRASTE (Cero confusión)
 PALETA_CLUSTERS = {
-    "Superventas Globales (Blockbusters - Alto Físico y Digital)": "#E11D48",          # Rojo carmesí
-    "Éxitos Digitales e Indies Virales (Alta Descarga, Bajo Físico)": "#2563EB",       # Azul royal
-    "Coleccionables de Consola (Físico Fuerte, Digital Moderado)": "#059669",         # Verde esmeralda
-    "Fracasos Comerciales y Bajo Rendimiento (Ventas Bajas)": "#D97706"                # Ámbar oscuro
+    "Superventas Globales (Blockbusters - Alto Físico y Digital)": "#F43F5E",    # Rojo carmesí vibrante
+    "Éxitos Digitales e Indies Virales (Alta Descarga, Bajo Físico)": "#3B82F6", # Azul eléctrico
+    "Coleccionables de Consola (Físico Fuerte, Digital Moderado)": "#10B981",   # Verde esmeralda vivo
+    "Fracasos Comerciales y Bajo Rendimiento (Ventas Bajas)": "#F59E0B"          # Ámbar dorado vivo
 }
 
 @st.cache_data
 def load_data():
     csv_path = "data/videojuegos_ventas_procesado.csv"
     if not os.path.exists(csv_path):
-        # Fallback si no se ha ejecutado
         return pd.DataFrame()
     return pd.read_csv(csv_path)
 
@@ -169,9 +183,9 @@ if df.empty:
 # =============================================================================
 with st.sidebar:
     st.markdown(f"""
-    <div style="display:flex; align-items:center; gap:8px; padding-bottom:12px; border-bottom:1px solid rgba(148,163,184,0.15); margin-bottom:16px;">
+    <div style="display:flex; align-items:center; gap:8px; padding-bottom:12px; border-bottom:1px solid rgba(148,163,184,0.25); margin-bottom:16px;">
         <span style="color:#60A5FA;">{LUCIDE['cpu']}</span>
-        <span style="font-size:1.15rem; font-weight:700; color:#F8FAFC;">Panel de Control</span>
+        <span style="font-size:1.15rem; font-weight:800; color:#FFFFFF;">Panel de Control</span>
     </div>
     """, unsafe_allow_html=True)
 
@@ -181,11 +195,11 @@ with st.sidebar:
         index=0
     )
 
-    st.markdown("<hr style='border:none; border-top:1px solid rgba(148,163,184,0.15); margin:18px 0;'>", unsafe_allow_html=True)
+    st.markdown("<hr style='border:none; border-top:1px solid rgba(148,163,184,0.2); margin:18px 0;'>", unsafe_allow_html=True)
     st.markdown(f"""
     <div style="display:flex; align-items:center; gap:6px; margin-bottom:12px;">
-        <span style="color:#94A3B8;">{LUCIDE['sliders']}</span>
-        <span style="font-size:0.82rem; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:#94A3B8;">Filtros Multivariados</span>
+        <span style="color:#60A5FA;">{LUCIDE['sliders']}</span>
+        <span style="font-size:0.85rem; font-weight:800; letter-spacing:0.06em; text-transform:uppercase; color:#60A5FA;">Filtros Multivariados</span>
     </div>
     """, unsafe_allow_html=True)
 
@@ -253,7 +267,7 @@ st.markdown(f"""
 <div class="main-header">
     <h1 class="main-title">{LUCIDE['layers']} Gaming Sales Intelligence</h1>
     <div class="main-subtitle">
-        Auditoría analítica y segmentación no supervisada K-Means | Rendimiento comercial físico vs. digital
+        Plataforma de auditoría analítica y segmentación K-Means | Rendimiento comercial físico vs. digital
     </div>
 </div>
 """, unsafe_allow_html=True)
@@ -274,8 +288,8 @@ with k1:
             <span class="kpi-label">Total Videojuegos</span>
             <span class="kpi-icon">{LUCIDE['layers']}</span>
         </div>
-        <div class="kpi-number">{total_obs} <span style="font-size:0.95rem; font-weight:400; color:#64748B;">/ {total_universo}</span></div>
-        <div class="kpi-detail">Títulos activos tras aplicar filtros</div>
+        <div class="kpi-number">{total_obs} <span style="font-size:0.95rem; font-weight:400; color:#94A3B8;">/ {total_universo}</span></div>
+        <div class="kpi-detail">Catálogo visible tras aplicar filtros</div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -283,11 +297,11 @@ with k2:
     st.markdown(f"""
     <div class="kpi-container">
         <div class="kpi-header">
-            <span class="kpi-label">Venta Digital Media</span>
+            <span class="kpi-label">Venta Digital Promedio</span>
             <span class="kpi-icon">{LUCIDE['download']}</span>
         </div>
-        <div class="kpi-number">{med_dig:.2f} <span style="font-size:0.9rem; font-weight:500; color:#64748B;">M copias</span></div>
-        <div class="kpi-detail">Descargas digitales promedio por juego</div>
+        <div class="kpi-number">{med_dig:.2f} <span style="font-size:0.9rem; font-weight:600; color:#94A3B8;">M copias</span></div>
+        <div class="kpi-detail">Descargas digitales por videojuego</div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -295,11 +309,11 @@ with k3:
     st.markdown(f"""
     <div class="kpi-container">
         <div class="kpi-header">
-            <span class="kpi-label">Venta Física Media</span>
+            <span class="kpi-label">Venta Física Promedio</span>
             <span class="kpi-icon">{LUCIDE['disc']}</span>
         </div>
-        <div class="kpi-number">{med_fis:.2f} <span style="font-size:0.9rem; font-weight:500; color:#64748B;">M copias</span></div>
-        <div class="kpi-detail">Discos y cartuchos físicos vendidos</div>
+        <div class="kpi-number">{med_fis:.2f} <span style="font-size:0.9rem; font-weight:600; color:#94A3B8;">M copias</span></div>
+        <div class="kpi-detail">Discos y cartuchos en tienda física</div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -307,26 +321,44 @@ with k4:
     st.markdown(f"""
     <div class="kpi-container">
         <div class="kpi-header">
-            <span class="kpi-label">Puntaje Crítica</span>
+            <span class="kpi-label">Puntaje de Crítica</span>
             <span class="kpi-icon">{LUCIDE['award']}</span>
         </div>
-        <div class="kpi-number">{prom_calif:.1f} <span style="font-size:0.9rem; font-weight:500; color:#64748B;">pts</span></div>
-        <div class="kpi-detail">Calificación promedio de la prensa especializada</div>
+        <div class="kpi-number">{prom_calif:.1f} <span style="font-size:0.9rem; font-weight:600; color:#94A3B8;">pts</span></div>
+        <div class="kpi-detail">Promedio Metacritic de la prensa</div>
     </div>
     """, unsafe_allow_html=True)
 
-st.markdown("<div style='height: 20px;'></div>", unsafe_allow_html=True)
+st.markdown("<div style='height: 22px;'></div>", unsafe_allow_html=True)
 
-# Layout base oscuro formal para Plotly
-layout_theme = dict(
+# Layout base oscuro formal para Plotly con CERO SOLAPAMIENTOS
+layout_base = dict(
     paper_bgcolor="rgba(0,0,0,0)",
-    plot_bgcolor="rgba(15, 23, 42, 0.4)",
-    font=dict(family="Plus Jakarta Sans, sans-serif", color="#CBD5E1", size=11),
-    title_font=dict(color="#F8FAFC", size=13, weight="bold"),
-    margin=dict(l=40, r=30, t=50, b=40),
-    xaxis=dict(gridcolor="rgba(148, 163, 184, 0.12)", zerolinecolor="rgba(148, 163, 184, 0.25)"),
-    yaxis=dict(gridcolor="rgba(148, 163, 184, 0.12)", zerolinecolor="rgba(148, 163, 184, 0.25)"),
-    legend=dict(font=dict(size=10), orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
+    plot_bgcolor="rgba(15, 23, 42, 0.6)",
+    font=dict(family="Plus Jakarta Sans, sans-serif", color="#E2E8F0", size=11),
+    margin=dict(l=45, r=25, t=65, b=65),
+    xaxis=dict(
+        gridcolor="rgba(148, 163, 184, 0.15)",
+        zerolinecolor="rgba(148, 163, 184, 0.3)",
+        tickfont=dict(color="#CBD5E1", size=10),
+        title_font=dict(color="#FFFFFF", size=11, weight="bold")
+    ),
+    yaxis=dict(
+        gridcolor="rgba(148, 163, 184, 0.15)",
+        zerolinecolor="rgba(148, 163, 184, 0.3)",
+        tickfont=dict(color="#CBD5E1", size=10),
+        title_font=dict(color="#FFFFFF", size=11, weight="bold")
+    ),
+    # LEYENDA EN LA PARTE INFERIOR PARA QUE NUNCA CHOQUE CON EL TÍTULO
+    legend=dict(
+        orientation="h",
+        yanchor="top",
+        y=-0.22,
+        xanchor="center",
+        x=0.5,
+        font=dict(color="#F1F5F9", size=10),
+        title=dict(text="")
+    )
 )
 
 # =============================================================================
@@ -334,9 +366,9 @@ layout_theme = dict(
 # =============================================================================
 if pagina == "Análisis General de Ventas":
     st.markdown(f"""
-    <div style="display:flex; align-items:center; gap:8px; margin-bottom:14px;">
+    <div style="display:flex; align-items:center; gap:8px; margin-bottom:16px;">
         <span style="color:#60A5FA;">{LUCIDE['chart_bar']}</span>
-        <h3 style="margin:0; font-size:1.25rem; font-weight:700; color:#F8FAFC;">Exploración Multivariada del Mercado de Videojuegos</h3>
+        <h3 style="margin:0; font-size:1.3rem; font-weight:800; color:#FFFFFF;">Exploración del Mercado: Ventas Físicas vs. Descargas Digitales</h3>
     </div>
     """, unsafe_allow_html=True)
 
@@ -345,44 +377,75 @@ if pagina == "Análisis General de Ventas":
     else:
         c_left, c_right = st.columns(2)
 
-        # Gráfica 1: Dispersión Ventas Físicas vs Ventas Digitales
+        # Gráfica 1: Dispersión Físico vs Digital coloreado por Clúster (MUY CLARO)
         with c_left:
             fig_disp = px.scatter(
                 df_filtro,
                 x="ventas_fisicas_millones",
                 y="ventas_digitales_millones",
-                color="genero",
+                color="Cluster_Nombre",
                 size="calificacion_critica",
-                hover_data=["titulo", "plataforma", "ventas_totales_millones", "precio_lanzamiento_usd"],
-                title="Relación entre Ventas Físicas y Ventas Digitales",
+                color_discrete_map=PALETA_CLUSTERS,
+                hover_data=["titulo", "plataforma", "genero", "ventas_totales_millones"],
+                title="Relación de Ventas Físicas vs. Digitales por Clúster",
                 labels={
                     "ventas_fisicas_millones": "Ventas Físicas (Millones de copias)",
                     "ventas_digitales_millones": "Ventas Digitales (Millones de copias)",
-                    "genero": "Género"
+                    "Cluster_Nombre": "Clúster"
                 }
             )
-            fig_disp.update_layout(**layout_theme)
+            fig_disp.update_layout(**layout_base)
+            fig_disp.update_layout(
+                title=dict(
+                    text="Relación de Ventas Físicas vs. Digitales por Clúster",
+                    x=0.01, y=0.96,
+                    font=dict(size=13.5, color="#FFFFFF", family="Plus Jakarta Sans, sans-serif")
+                )
+            )
             st.plotly_chart(fig_disp, width="stretch")
 
-        # Gráfica 2: Histograma de Ventas Totales por Género
+        # Gráfica 2: Comparativa de Ventas Físicas vs Digitales por Género (Barras Agrupadas)
         with c_right:
-            fig_hist = px.histogram(
-                df_filtro,
-                x="ventas_totales_millones",
-                color="genero",
-                nbins=25,
-                title="Distribución de Ventas Totales por Género de Videojuego",
-                labels={
-                    "ventas_totales_millones": "Ventas Totales Globales (Millones de copias)",
-                    "count": "Cantidad de Títulos"
-                }
+            gen_ventas = df_filtro.groupby("genero")[["ventas_fisicas_millones", "ventas_digitales_millones"]].mean().reset_index()
+            gen_ventas = pd.melt(
+                gen_ventas,
+                id_vars=["genero"],
+                value_vars=["ventas_fisicas_millones", "ventas_digitales_millones"],
+                var_name="Canal",
+                value_name="Ventas_Medias"
             )
-            fig_hist.update_layout(**layout_theme)
-            st.plotly_chart(fig_hist, width="stretch")
+            gen_ventas["Canal"] = gen_ventas["Canal"].map({
+                "ventas_fisicas_millones": "Venta Física Media (M)",
+                "ventas_digitales_millones": "Venta Digital Media (M)"
+            })
 
+            fig_bar_gen = px.bar(
+                gen_ventas,
+                x="genero",
+                y="Ventas_Medias",
+                color="Canal",
+                barmode="group",
+                color_discrete_map={
+                    "Venta Física Media (M)": "#10B981", # Verde
+                    "Venta Digital Media (M)": "#3B82F6"  # Azul
+                },
+                title="Promedio de Ventas Físicas vs. Digitales por Género",
+                labels={"genero": "Género", "Ventas_Medias": "Millones de Copias Promedio"}
+            )
+            fig_bar_gen.update_layout(**layout_base)
+            fig_bar_gen.update_layout(
+                title=dict(
+                    text="Promedio de Ventas Físicas vs. Digitales por Género",
+                    x=0.01, y=0.96,
+                    font=dict(size=13.5, color="#FFFFFF", family="Plus Jakarta Sans, sans-serif")
+                )
+            )
+            st.plotly_chart(fig_bar_gen, width="stretch")
+
+        st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
         c_bar, c_heat = st.columns(2)
 
-        # Gráfica 3: Ventas por Plataforma
+        # Gráfica 3: Ventas Totales por Plataforma (Barras Horizontales Ordenadas)
         with c_bar:
             plat_counts = df_filtro.groupby("plataforma")["ventas_totales_millones"].sum().reset_index()
             plat_counts = plat_counts.sort_values(by="ventas_totales_millones", ascending=True)
@@ -392,29 +455,53 @@ if pagina == "Análisis General de Ventas":
                 x="ventas_totales_millones",
                 y="plataforma",
                 orientation="h",
-                title="Volumen Total de Ventas por Plataforma de Videojuegos",
-                labels={"ventas_totales_millones": "Millones de Copias Vendidas", "plataforma": "Plataforma"},
+                text="ventas_totales_millones",
+                title="Volumen Acumulado de Ventas por Plataforma",
+                labels={"ventas_totales_millones": "Total Copias Vendidas (Millones)", "plataforma": "Plataforma"},
                 color="ventas_totales_millones",
                 color_continuous_scale="Blues"
             )
-            fig_bar.update_layout(**layout_theme)
+            fig_bar.update_layout(**layout_base)
+            fig_bar.update_traces(texttemplate='%{text:.1f} M', textposition='outside', textfont=dict(color="#FFFFFF", size=10.5))
             fig_bar.update_coloraxes(showscale=False)
+            fig_bar.update_layout(
+                title=dict(
+                    text="Volumen Acumulado de Ventas por Plataforma",
+                    x=0.01, y=0.96,
+                    font=dict(size=13.5, color="#FFFFFF", family="Plus Jakarta Sans, sans-serif")
+                )
+            )
             st.plotly_chart(fig_bar, width="stretch")
 
-        # Gráfica 4: Matriz de Correlación Numérica (Heatmap)
+        # Gráfica 4: Matriz de Correlación Numérica (Heatmap Claro con Nombres Limpios)
         with c_heat:
             cols_corr = ["ventas_fisicas_millones", "ventas_digitales_millones", "precio_lanzamiento_usd", "calificacion_critica", "horas_juego"]
-            corr_mat = df_filtro[cols_corr].corr().round(2)
+            nombres_limpios = {
+                "ventas_fisicas_millones": "Ventas Físicas",
+                "ventas_digitales_millones": "Ventas Digitales",
+                "precio_lanzamiento_usd": "Precio USD",
+                "calificacion_critica": "Calificación",
+                "horas_juego": "Horas Juego"
+            }
+            sub_df = df_filtro[cols_corr].rename(columns=nombres_limpios)
+            corr_mat = sub_df.corr().round(2)
 
             fig_heat = px.imshow(
                 corr_mat,
                 text_auto=True,
-                title="Matriz de Correlación Multivariada de Atributos",
+                title="Matriz de Correlación Lineal Multivariada",
                 color_continuous_scale="RdBu_r",
                 zmin=-1, zmax=1
             )
-            fig_heat.update_layout(**layout_theme)
+            fig_heat.update_layout(**layout_base)
             fig_heat.update_coloraxes(showscale=False)
+            fig_heat.update_layout(
+                title=dict(
+                    text="Matriz de Correlación Lineal Multivariada",
+                    x=0.01, y=0.96,
+                    font=dict(size=13.5, color="#FFFFFF", family="Plus Jakarta Sans, sans-serif")
+                )
+            )
             st.plotly_chart(fig_heat, width="stretch")
 
 # =============================================================================
@@ -422,9 +509,9 @@ if pagina == "Análisis General de Ventas":
 # =============================================================================
 else:
     st.markdown(f"""
-    <div style="display:flex; align-items:center; gap:8px; margin-bottom:14px;">
+    <div style="display:flex; align-items:center; gap:8px; margin-bottom:16px;">
         <span style="color:#60A5FA;">{LUCIDE['pie_chart']}</span>
-        <h3 style="margin:0; font-size:1.25rem; font-weight:700; color:#F8FAFC;">Segmentación no Supervisada: Descubrimiento de Clústeres (K=4)</h3>
+        <h3 style="margin:0; font-size:1.3rem; font-weight:800; color:#FFFFFF;">Segmentación No Supervisada: 4 Clústeres de Mercado (K=4)</h3>
     </div>
     """, unsafe_allow_html=True)
 
@@ -443,12 +530,23 @@ else:
                 names="Cluster_Nombre",
                 values="conteo",
                 hole=0.6,
-                title="Proporción de Catálogo por Clúster",
+                title="Proporción del Catálogo por Clúster",
                 color="Cluster_Nombre",
                 color_discrete_map=PALETA_CLUSTERS
             )
-            fig_pie.update_layout(**layout_theme)
-            fig_pie.update_traces(textposition="inside", textinfo="percent")
+            fig_pie.update_layout(**layout_base)
+            fig_pie.update_traces(
+                textposition="inside",
+                textinfo="percent",
+                textfont=dict(size=12, color="#FFFFFF", family="Plus Jakarta Sans")
+            )
+            fig_pie.update_layout(
+                title=dict(
+                    text="Proporción del Catálogo por Clúster",
+                    x=0.01, y=0.96,
+                    font=dict(size=13.5, color="#FFFFFF", family="Plus Jakarta Sans, sans-serif")
+                )
+            )
             st.plotly_chart(fig_pie, width="stretch")
 
         with c_pca:
@@ -460,21 +558,28 @@ else:
                 hover_data=["titulo", "ventas_totales_millones", "calificacion_critica"],
                 title="Proyección de Clústeres (PCA 2D - 75.2% Varianza Explicada)",
                 labels={
-                    "pca_x": "Componente Principal 1 (Volumen de Ventas y Calificación)",
+                    "pca_x": "Componente Principal 1 (Volumen y Calidad)",
                     "pca_y": "Componente Principal 2 (Preferencia Digital vs. Físico)",
                     "Cluster_Nombre": "Clúster"
                 },
                 color_discrete_map=PALETA_CLUSTERS
             )
-            fig_pca.update_layout(**layout_theme)
+            fig_pca.update_layout(**layout_base)
+            fig_pca.update_layout(
+                title=dict(
+                    text="Proyección de Clústeres (PCA 2D - 75.2% Varianza Explicada)",
+                    x=0.01, y=0.96,
+                    font=dict(size=13.5, color="#FFFFFF", family="Plus Jakarta Sans, sans-serif")
+                )
+            )
             st.plotly_chart(fig_pca, width="stretch")
 
         # Fila 2: Dos Gráficas Adicionales comparativas
-        st.markdown("<hr style='border:none; border-top:1px solid rgba(148,163,184,0.12); margin:18px 0;'>", unsafe_allow_html=True)
+        st.markdown("<hr style='border:none; border-top:1px solid rgba(148,163,184,0.2); margin:20px 0;'>", unsafe_allow_html=True)
         st.markdown(f"""
-        <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:14px;">
             <span style="color:#60A5FA;">{LUCIDE['chart_bar']}</span>
-            <h4 style="margin:0; font-size:1.1rem; font-weight:700; color:#F8FAFC;">Comparación Multidimensional entre Clústeres</h4>
+            <h4 style="margin:0; font-size:1.15rem; font-weight:800; color:#FFFFFF;">Comparación Multidimensional entre Clústeres</h4>
         </div>
         """, unsafe_allow_html=True)
 
@@ -482,22 +587,28 @@ else:
 
         # Gráfica Adicional 1: Boxplot de Ventas Totales por Clúster
         with c_box:
-            st.markdown(f"<div style='font-size:0.88rem; font-weight:600; color:#94A3B8; margin-bottom:6px;'>{LUCIDE['chart_bar']} Gráfica Adicional 1: Dispersión de Ventas Totales</div>", unsafe_allow_html=True)
             fig_box = px.box(
                 df_filtro,
                 x="Cluster_Nombre",
                 y="ventas_totales_millones",
                 color="Cluster_Nombre",
                 color_discrete_map=PALETA_CLUSTERS,
+                title="Dispersión del Volumen de Ventas Totales por Clúster",
                 labels={"Cluster_Nombre": "Clúster", "ventas_totales_millones": "Ventas Totales (Millones de Copias)"}
             )
-            fig_box.update_layout(**layout_theme)
-            fig_box.update_layout(showlegend=False)
+            fig_box.update_layout(**layout_base)
+            fig_box.update_layout(
+                showlegend=False,
+                title=dict(
+                    text="Dispersión del Volumen de Ventas Totales por Clúster",
+                    x=0.01, y=0.96,
+                    font=dict(size=13.5, color="#FFFFFF", family="Plus Jakarta Sans, sans-serif")
+                )
+            )
             st.plotly_chart(fig_box, width="stretch")
 
         # Gráfica Adicional 2: Dispersión Ventas vs Calificación Crítica
         with c_scat2:
-            st.markdown(f"<div style='font-size:0.88rem; font-weight:600; color:#94A3B8; margin-bottom:6px;'>{LUCIDE['scatter']} Gráfica Adicional 2: Relación Ventas Totales vs. Calificación</div>", unsafe_allow_html=True)
             fig_scat2 = px.scatter(
                 df_filtro,
                 x="calificacion_critica",
@@ -506,15 +617,23 @@ else:
                 size="precio_lanzamiento_usd",
                 color_discrete_map=PALETA_CLUSTERS,
                 hover_data=["titulo", "plataforma", "genero"],
+                title="Relación entre Calificación Crítica y Ventas Totales",
                 labels={"calificacion_critica": "Calificación Metacritic (Puntos)", "ventas_totales_millones": "Ventas Totales (Millones)"}
             )
-            fig_scat2.update_layout(**layout_theme)
+            fig_scat2.update_layout(**layout_base)
+            fig_scat2.update_layout(
+                title=dict(
+                    text="Relación entre Calificación Crítica y Ventas Totales",
+                    x=0.01, y=0.96,
+                    font=dict(size=13.5, color="#FFFFFF", family="Plus Jakarta Sans, sans-serif")
+                )
+            )
             st.plotly_chart(fig_scat2, width="stretch")
 
 # =============================================================================
 # TABLA DE AUDITORÍA DE DATOS
 # =============================================================================
-st.markdown("<hr style='border:none; border-top:1px solid rgba(148,163,184,0.12); margin:24px 0 16px 0;'>", unsafe_allow_html=True)
+st.markdown("<hr style='border:none; border-top:1px solid rgba(148,163,184,0.2); margin:24px 0 16px 0;'>", unsafe_allow_html=True)
 with st.expander("Inspeccionar Catálogo Completo de Videojuegos Filtrados", expanded=False):
     st.dataframe(
         df_filtro[[
