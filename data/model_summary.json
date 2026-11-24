@@ -1,0 +1,61 @@
+{
+  "total_records": 947,
+  "features_used": [
+    "attack_power",
+    "defense_power",
+    "durability",
+    "sell_price",
+    "rarity_tier"
+  ],
+  "optimal_k": 4,
+  "inertia": 1874.44,
+  "silhouette_score": 0.3959,
+  "calinski_harabasz": 479.7,
+  "davies_bouldin": 0.9452,
+  "cluster_names": {
+    "0": "Recursos Básicos, Forraje y Consumibles",
+    "1": "Arsenal Ofensivo y Armas de Asalto",
+    "2": "Blindaje Táctico, Armaduras y Escudos",
+    "3": "Jefes Supremos, Calamidades y Reliquias Míticas"
+  },
+  "cluster_counts": {
+    "Arsenal Ofensivo y Armas de Asalto": 432,
+    "Recursos Básicos, Forraje y Consumibles": 344,
+    "Blindaje Táctico, Armaduras y Escudos": 138,
+    "Jefes Supremos, Calamidades y Reliquias Míticas": 33
+  },
+  "centroids_original": [
+    {
+      "attack_power": 8.133720930232535,
+      "defense_power": 5.014534883720931,
+      "durability": 33.127906976744164,
+      "sell_price": 133.9883720930232,
+      "rarity_tier": 2.6395348837209314
+    },
+    {
+      "attack_power": 47.75231481481482,
+      "defense_power": 0.73379629629631,
+      "durability": 57.73148148148149,
+      "sell_price": 571.125,
+      "rarity_tier": 4.4375
+    },
+    {
+      "attack_power": 1.1159420289854722,
+      "defense_power": 43.05072463768112,
+      "durability": 104.73188405797103,
+      "sell_price": 1433.3260869565215,
+      "rarity_tier": 4.536231884057971
+    },
+    {
+      "attack_power": 75.6969696969697,
+      "defense_power": 47.18181818181818,
+      "durability": 706.2121212121211,
+      "sell_price": 1318.4848484848485,
+      "rarity_tier": 4.696969696969697
+    }
+  ],
+  "pca_variance_ratio": [
+    0.4467,
+    0.2611
+  ]
+}
