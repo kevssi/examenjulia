@@ -13,7 +13,7 @@ import plotly.graph_objects as go
 
 # Configuración de página de Streamlit
 st.set_page_config(
-    page_title="Gaming Sales Intelligence | Segmentación K-Means",
+    page_title="Ventas del Formato Físico y Digital de los Videojuegos",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -265,9 +265,9 @@ df_filtro = df[
 # =============================================================================
 st.markdown(f"""
 <div class="main-header">
-    <h1 class="main-title">{LUCIDE['layers']} Gaming Sales Intelligence</h1>
+    <h1 class="main-title">{LUCIDE['layers']} Ventas del Formato Físico y Digital de los Videojuegos</h1>
     <div class="main-subtitle">
-        Plataforma de auditoría analítica y segmentación K-Means | Rendimiento comercial físico vs. digital
+        Plataforma analítica y segmentación K-Means | Rendimiento comercial físico vs. digital
     </div>
 </div>
 """, unsafe_allow_html=True)

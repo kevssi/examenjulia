@@ -55,10 +55,10 @@ def build_clean_rubric_pdf():
     pdf.cell(0, 8, "GUIA DE RESPUESTAS A LA RUBRICA DE EVALUACION", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
     pdf.set_font("Helvetica", "B", 12.5)
     pdf.set_text_color(31, 41, 55)
-    pdf.cell(0, 7, "Proyecto Integrador: Minería de Datos con Algoritmo K-Means", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+    pdf.cell(0, 7, "Ventas del Formato Físico y Digital de los Videojuegos", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
     pdf.set_font("Helvetica", "", 9.5)
     pdf.set_text_color(107, 114, 128)
-    pdf.cell(0, 6, "Desglose Técnico y Respuesta Punto por Punto (Partes 1 a 8)", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+    pdf.cell(0, 6, "Segmentación con Algoritmo No Supervisado K-Means (Partes 1 a 8)", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
 
     pdf.ln(8)
     pdf.set_draw_color(209, 213, 219)

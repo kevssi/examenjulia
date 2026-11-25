@@ -67,9 +67,9 @@ def build_clean_documentation_pdf():
     pdf.set_font("Helvetica", "B", 16)
     pdf.set_text_color(17, 24, 39)
     pdf.cell(0, 8, "PROYECTO INTEGRADOR", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-    pdf.set_font("Helvetica", "B", 13)
+    pdf.set_font("Helvetica", "B", 13.5)
     pdf.set_text_color(31, 41, 55)
-    pdf.cell(0, 7, "Segmentación de Rendimiento de Videojuegos Físicos vs. Digitales", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+    pdf.cell(0, 7, "Ventas del Formato Físico y Digital de los Videojuegos", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
     pdf.cell(0, 6, "mediante Algoritmo No Supervisado K-Means", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
 
     pdf.ln(8)

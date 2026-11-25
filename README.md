@@ -1,4 +1,4 @@
-# Gaming Sales Intelligence: Segmentación de Rendimiento de Videojuegos Físicos vs. Digitales mediante K-Means
+# Ventas del Formato Físico y Digital de los Videojuegos mediante K-Means
 
 [![Python](https://img.shields.io/badge/Python-3.11%20%7C%203.12-blue.svg)](https://www.python.org/)
 [![Scikit-Learn](https://img.shields.io/badge/Scikit--Learn-1.4+-orange.svg)](https://scikit-learn.org/)
