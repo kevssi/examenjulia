@@ -1,71 +1,69 @@
 """
-Script para generar el Documento Oficial del Proyecto en formato académico limpio y sobrio:
-docs/Documentacion_Oficial_Proyecto_KMeans_Videojuegos.pdf
-SIN encabezados, SIN números de página ni pies, SIN leyendas de figura ('Figura X...'), SIN solapamientos de texto.
+Generador del Reporte Oficial Académico en PDF
+Documentacion_Oficial_Proyecto_KMeans_Videojuegos.pdf
+Cubre estrictamente los 8 apartados de la rúbrica institucional (Partes 1 a 8 completas).
+Tipografía TrueType Arial 12, títulos en negrita, tablas completas de registros,
+logo oficial de UTSLRC, sin encabezados de página, sin pies de página y sin leyendas de figura.
 """
 
 import os
+import pandas as pd
 from fpdf import FPDF
 from fpdf.enums import XPos, YPos
 
-class CleanDocumentPDF(FPDF):
+class OfficialCleanDocPDF(FPDF):
     def __init__(self):
         super().__init__(orientation="P", unit="mm", format="A4")
         self.set_auto_page_break(auto=True, margin=15)
-        self.set_margins(left=20, top=18, right=20)
-        # Registrar fuentes TrueType Arial nativas de Windows
+        self.set_margins(left=18, top=16, right=18)
         self.add_font("Arial", "", "C:/Windows/Fonts/arial.ttf")
         self.add_font("Arial", "B", "C:/Windows/Fonts/arialbd.ttf")
 
-    # 1. SIN ENCABEZADO
     def header(self):
         pass
 
-    # 2. SIN PIE DE PÁGINA NI NÚMERO DE PÁGINA
     def footer(self):
         pass
 
     def section_title(self, num_str, title_str):
-        self.ln(4)
-        self.set_font("Arial", "B", 13.5)
-        self.set_text_color(17, 24, 39) # Negro
-        self.cell(0, 7, f"{num_str}. {title_str}", align="L", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+        self.ln(2)
+        self.set_font("Arial", "B", 13)
+        self.set_text_color(17, 24, 39)
+        self.cell(0, 7, f"{num_str}. {title_str.upper()}", align="L", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
         self.set_draw_color(209, 213, 219)
         self.set_line_width(0.4)
-        self.line(20, self.get_y(), 190, self.get_y())
-        self.ln(4)
+        self.line(18, self.get_y(), 192, self.get_y())
+        self.ln(3)
 
-    def paragraph(self, text, bold_prefix=""):
-        self.set_font("Arial", "", 12)
-        self.set_text_color(55, 65, 81)
+    def paragraph(self, text, bold_prefix=None):
         if bold_prefix:
             self.set_font("Arial", "B", 12)
             self.set_text_color(17, 24, 39)
-            self.write(5.8, bold_prefix + " ")
-            self.set_font("Arial", "", 12)
-            self.set_text_color(55, 65, 81)
-        self.write(5.8, text + "\n\n")
-
-    def bullet(self, title, desc):
-        # Flujo continuo natural para evitar CUALQUIER solapamiento horizontal
-        self.set_font("Arial", "B", 12)
-        self.set_text_color(17, 24, 39)
-        self.write(5.8, f"- {title}: ")
+            self.write(5.8, f"{bold_prefix} ")
         self.set_font("Arial", "", 12)
         self.set_text_color(55, 65, 81)
-        self.write(5.8, desc + "\n\n")
+        self.write(5.8, f"{text}\n\n")
 
+    def bullet(self, title, desc):
+        self.set_font("Arial", "B", 12)
+        self.set_text_color(17, 24, 39)
+        self.write(5.8, f"• {title}: ")
+        self.set_font("Arial", "", 12)
+        self.set_text_color(55, 65, 81)
+        self.write(5.8, f"{desc}\n\n")
 
 def build_clean_documentation_pdf():
-    pdf = CleanDocumentPDF()
-    pdf.alias_nb_pages()
+    pdf = OfficialCleanDocPDF()
+
+    raw_path = "data/videojuegos_ventas_original.csv"
+    if not os.path.exists(raw_path):
+        raw_path = "videojuegos_ventas_original.csv"
+    df_raw = pd.read_csv(raw_path)
 
     # =========================================================================
-    # 1. PORTADA LIMPIA Y FORMAL (Con logo institucional UTSLRC)
+    # 1. PORTADA OFICIAL
     # =========================================================================
     pdf.add_page()
-    
-    # Logo oficial UTSLRC
     logo_path = "assets/logo_utslrc.png"
     if os.path.exists(logo_path):
         pdf.image(logo_path, x=70, y=20, w=70)
@@ -73,10 +71,9 @@ def build_clean_documentation_pdf():
     else:
         pdf.ln(30)
 
-    # Título principal
     pdf.set_font("Arial", "B", 18)
     pdf.set_text_color(17, 24, 39)
-    pdf.cell(0, 9, "PROYECTO INTEGRADOR", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+    pdf.cell(0, 9, "DOCUMENTACIÓN OFICIAL DEL PROYECTO", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
     pdf.set_font("Arial", "B", 14)
     pdf.set_text_color(31, 41, 55)
     pdf.cell(0, 8, "Ventas del Formato Físico y Digital de los Videojuegos", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
@@ -90,7 +87,6 @@ def build_clean_documentation_pdf():
 
     pdf.ln(45)
 
-    # Datos solicitados exactamente por el alumno
     campos = [
         ("Materia", "Extracción de Conocimiento en Bases de Datos"),
         ("Alumno", "Kevin Uriel Silva Talamantes"),
@@ -158,117 +154,136 @@ def build_clean_documentation_pdf():
     pdf.bullet("4. Despliegue en Dashboard Interactivo", "Construir una plataforma analítica en Streamlit con indicadores KPI en tiempo real, gráficas analíticas interactivas, dos páginas de navegación y filtros multivariados funcionales.")
 
     # =========================================================================
-    # 4. DESCRIPCIÓN DEL DATASET
+    # 4. OBTENCIÓN Y EXPLORACIÓN DEL DATASET (PARTE 2 DE LA RÚBRICA)
     # =========================================================================
     pdf.add_page()
-    pdf.section_title("4", "Descripción del Dataset")
+    pdf.section_title("4", "Obtención y Exploración del Dataset")
     
     pdf.paragraph(
-        "El dataset fue recopilado a partir de fuentes públicas y registros consolidados de la industria (VGChartz / Metacritic / Kaggle Video Game Sales Dataset). "
-        "El archivo original cuenta con 928 filas y 12 columnas, conteniendo tanto atributos descriptivos como métricas cuantitativas de ventas y mercado.",
-        bold_prefix="Origen y Características:"
+        "El dataset fue recopilado a partir de fuentes públicas consolidadas de la industria: VGChartz (registro de ventas físicas en retail), "
+        "Metacritic (calificaciones promedio otorgadas por la prensa especializada) y Kaggle Video Game Sales Dataset. "
+        "El archivo original cuenta con 928 filas y 12 columnas (superando ampliamente el requerimiento de 500 registros y 5 variables). "
+        "Se importó en Python mediante la instrucción pd.read_csv('data/videojuegos_ventas_original.csv').",
+        bold_prefix="Fuente, Dimensiones e Importación:"
     )
 
-    # Tabla limpia de variables
-    pdf.set_font("Arial", "B", 9)
-    pdf.set_fill_color(243, 244, 246)
-    pdf.set_text_color(17, 24, 39)
-    pdf.set_draw_color(209, 213, 219)
+    pdf.paragraph(
+        "Muestra de los primeros 10 registros del dataset original (df_raw.head(10)):",
+        bold_prefix="Primeros 10 Registros:"
+    )
+
+    # Tabla visual de 10 registros originales
+    cols_w = [18, 50, 24, 28, 18, 18, 18]
+    headers = ["ID", "Título", "Género", "Plataforma", "V. Fís", "V. Dig", "Precio"]
     
-    cols = [42, 20, 24, 84]
-    pdf.cell(cols[0], 6, "Variable", border=1, align="C", fill=True, new_x=XPos.RIGHT, new_y=YPos.TOP)
-    pdf.cell(cols[1], 6, "Tipo", border=1, align="C", fill=True, new_x=XPos.RIGHT, new_y=YPos.TOP)
-    pdf.cell(cols[2], 6, "Escala / Rango", border=1, align="C", fill=True, new_x=XPos.RIGHT, new_y=YPos.TOP)
-    pdf.cell(cols[3], 6, "Descripción", border=1, align="C", fill=True, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+    pdf.set_font("Arial", "B", 7.5)
+    pdf.set_fill_color(243, 244, 246)
+    for i, h in enumerate(headers):
+        nx = XPos.LMARGIN if i == len(headers) - 1 else XPos.RIGHT
+        ny = YPos.NEXT if i == len(headers) - 1 else YPos.TOP
+        pdf.cell(cols_w[i], 5.0, h, border=1, align="C", fill=True, new_x=nx, new_y=ny)
 
-    vars_info = [
-        ("id_juego", "Texto", "GAME-0001...", "Identificador único asignado a cada videojuego."),
-        ("titulo", "Texto", "Nombre comercial", "Título del videojuego y edición de lanzamiento."),
-        ("genero", "Texto", "9 géneros", "Acción, Aventura, Deportes, RPG, Shooter, Indie, etc."),
-        ("plataforma", "Texto", "6 plataformas", "PS5, PS4, Xbox Series, Xbox One, Switch y PC."),
-        ("ventas_fisicas_millones", "Numérico", "0.01 a 15.0 M", "Copias en cartucho/disco físico vendidas a nivel global."),
-        ("ventas_digitales_millones", "Numérico", "0.02 a 20.0 M", "Copias descargadas por canales digitales a nivel global."),
-        ("ventas_totales_millones", "Numérico", "0.03 a 35.0 M", "Suma acumulada del volumen de ventas de ambos canales."),
-        ("precio_lanzamiento_usd", "Numérico", "$19.99 a $79.99", "Precio oficial de venta sugerido al público en USD."),
-        ("calificacion_critica", "Numérico", "30 a 98 puntos", "Puntaje de aceptación otorgado por la prensa especializada."),
-        ("horas_juego", "Numérico", "5 a 120 horas", "Duración media estimada de la campaña principal.")
-    ]
+    pdf.set_font("Arial", "", 7.0)
+    for _, r in df_raw.head(10).iterrows():
+        pdf.cell(cols_w[0], 4.5, str(r["id_juego"]), border=1, align="C", new_x=XPos.RIGHT, new_y=YPos.TOP)
+        pdf.cell(cols_w[1], 4.5, f" {str(r['titulo'])[:25]}", border=1, align="L", new_x=XPos.RIGHT, new_y=YPos.TOP)
+        pdf.cell(cols_w[2], 4.5, str(r["genero"]), border=1, align="C", new_x=XPos.RIGHT, new_y=YPos.TOP)
+        pdf.cell(cols_w[3], 4.5, str(r["plataforma"])[:14], border=1, align="C", new_x=XPos.RIGHT, new_y=YPos.TOP)
+        pdf.cell(cols_w[4], 4.5, f"{r['ventas_fisicas_millones']:.2f}M", border=1, align="C", new_x=XPos.RIGHT, new_y=YPos.TOP)
+        pdf.cell(cols_w[5], 4.5, f"{r['ventas_digitales_millones']:.2f}M" if pd.notnull(r['ventas_digitales_millones']) else "Nulo", border=1, align="C", new_x=XPos.RIGHT, new_y=YPos.TOP)
+        pdf.cell(cols_w[6], 4.5, f"${r['precio_lanzamiento_usd']:.2f}" if pd.notnull(r['precio_lanzamiento_usd']) else "Nulo", border=1, align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
 
-    pdf.set_font("Arial", "", 8)
-    pdf.set_text_color(55, 65, 81)
-    for v_nom, v_tipo, v_rng, v_desc in vars_info:
-        pdf.cell(cols[0], 5.2, f" {v_nom}", border=1, align="L", new_x=XPos.RIGHT, new_y=YPos.TOP)
-        pdf.cell(cols[1], 5.2, v_tipo, border=1, align="C", new_x=XPos.RIGHT, new_y=YPos.TOP)
-        pdf.cell(cols[2], 5.2, v_rng, border=1, align="C", new_x=XPos.RIGHT, new_y=YPos.TOP)
-        pdf.cell(cols[3], 5.2, f" {v_desc}", border=1, align="L", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+    pdf.ln(4)
 
-    pdf.ln(5)
+    pdf.paragraph(
+        "El dataset contiene 5 columnas categóricas de texto (id_juego, titulo, genero, plataforma, distribuidora) y 7 numéricas "
+        "(anio_lanzamiento, ventas_fisicas_millones, ventas_digitales_millones, ventas_totales_millones, precio_lanzamiento_usd, "
+        "calificacion_critica y horas_juego). Mediante df.describe() se identificaron promedios de 3.42M en ventas físicas, 5.76M en digitales, "
+        "precio medio de $52.42 USD, calificación de 76.35 pts y duración de 31.48 horas, revelando además inconsistencias con valores negativos "
+        "(-2.50M en ventas y -$59.99 USD en precio).",
+        bold_prefix="Columnas, Tipos y Estadísticas Descriptivas:"
+    )
 
-    # Gráfica centrada de correlación (SIN TEXTO DE LEYENDA 'Figura 1...')
+    pdf.paragraph(
+        "Se auditaron los datos identificando 8 registros duplicados exactos y 17 valores nulos (5 en ventas digitales, 6 en precio y 6 en calificación). "
+        "Para la exploración visual se crearon 4 gráficas: matriz de correlación (Heatmap), dispersión de ventas, boxplot de distribución y gráfico de dona. "
+        "Se seleccionaron 5 variables continuas clave para el modelo (ventas físicas y digitales para capturar los canales, precio para medir la barrera económica, "
+        "calificación para medir aceptación crítica y horas de juego para medir volumen de contenido).",
+        bold_prefix="Nulos, Duplicados, Gráficas y Selección de Variables:"
+    )
+
+    # Gráfica de correlación
     img_hm = "assets/1_heatmap_correlacion.png"
     if os.path.exists(img_hm):
         pdf.image(img_hm, x=55, y=pdf.get_y(), w=100)
-        pdf.ln(82)
+        pdf.ln(78)
 
     # =========================================================================
-    # 5. DESARROLLO DEL PROYECTO
+    # 5. LIMPIEZA, PREPARACIÓN Y K-MEANS (PARTES 3 Y 4 DE LA RÚBRICA)
     # =========================================================================
     pdf.add_page()
-    pdf.section_title("5", "Desarrollo del Proyecto: Limpieza, Preparación y K-Means")
+    pdf.section_title("5", "Limpieza, Preparación y Modelado K-Means")
 
     pdf.paragraph(
-        "El preprocesamiento de datos se desarrolló bajo tres etapas indispensables para asegurar la calidad de los agrupamientos:",
-        bold_prefix="Auditoría y Limpieza:"
+        "Se aplicó un riguroso protocolo de limpieza y preparación de datos para garantizar la validez del agrupamiento:",
+        bold_prefix="Limpieza y Preparación de Datos (Parte 3):"
     )
-    pdf.bullet("1. Eliminación de Duplicados", "Se identificaron 8 filas duplicadas exactas generadas durante la consolidación de fuentes, procediendo a su eliminación para no distorsionar las densidades de puntos (dejando 920 registros limpios).")
-    pdf.bullet("2. Corrección de Valores Negativos", "Se corrigieron valores anómalos negativos en precio y ventas físicas originados por errores de digitación, aplicando la función de valor absoluto np.abs().")
-    pdf.bullet("3. Imputación Contextual de Nulos", "Se trataron 17 valores nulos (5 en ventas digitales, 6 en precio y 6 en calificación). Se aplicó imputación por mediana condicional según el género de cada juego, evitando la distorsión que ocasionaría la media aritmética global ante títulos extremos.")
-    pdf.bullet("4. Estandarización con StandardScaler", "Debido a que las ventas están medidas en millones (0 a 15), el precio en decenas de dólares ($20 a $80) y la calificación en escala de 0 a 100, se aplicó StandardScaler para normalizar las 5 variables a media 0 y varianza 1. Sin esta transformación, la calificación y el precio habrían dominado el 90% del cálculo de distancias euclidianas.")
+    pdf.bullet("1. Eliminación de Duplicados", "Se eliminaron los 8 registros duplicados exactos mediante drop_duplicates(), reduciendo el catálogo a 920 registros limpios y únicos.")
+    pdf.bullet("2. Corrección de Inconsistencias (Negativos)", "Se convirtieron los valores negativos accidentales a positivos aplicando valor absoluto con np.abs() a todas las variables numéricas.")
+    pdf.bullet("3. Tratamiento de Valores Nulos", "Los 17 valores faltantes se imputaron contextualmente con la mediana calculada según el género del juego con fillna(groupby('genero')), evitando distorsiones de la media global.")
+    pdf.bullet("4. Tratamiento de Valores Atípicos (Outliers)", "Se detectaron outliers legítimos con ventas superiores a 15-20M de copias (Superventas Blockbusters). Se justificó NO eliminarlos porque son fenómenos comerciales reales e indispensables para el negocio; su magnitud se equilibró mediante el escalamiento.")
+    pdf.bullet("5. Escalamiento con StandardScaler", "Se aplicó StandardScaler() sobre las 5 variables numéricas continuas para normalizarlas a Media = 0 y Varianza = 1. Esta transformación es indispensable para que el precio ($20-$70) o la calificación (0-100) no dominen sobre los millones de copias (0-15M) en la distancia euclidiana.")
 
-    # Gráfica del codo y silueta (SIN TEXTO 'Figura 2...')
+    # Gráfica del codo y silueta
     img_k = "assets/2_codo_silueta.png"
     if os.path.exists(img_k):
         pdf.image(img_k, x=25, y=pdf.get_y(), w=160)
-        pdf.ln(70)
+        pdf.ln(68)
 
     pdf.paragraph(
-        "Se evaluaron 7 valores de K (desde K=2 hasta K=8). Se seleccionó K=4 como la configuración óptima. "
-        "En K=4 se ubica el punto de inflexión del codo (Inercia = 1,415.33) y se obtiene el valor máximo de Silueta (0.4197), con Calinski-Harabasz de 687.04 y Davies-Bouldin de 0.9637. "
-        "En comparación con K=3 (Inercia = 1,885.4, Silueta = 0.4141), K=3 fusionaba erróneamente los títulos digitales con los de consola en un único grupo mixto, perdiendo resolución comercial. K=4 separa con total nitidez ambos canales de venta.",
-        bold_prefix="Selección y Justificación de K (K=4 vs K=3):"
+        "Se evaluaron 7 valores de K (K=2 a K=8) con Scikit-Learn. Se seleccionó K=4 como la configuración definitiva. "
+        "En K=4 se ubica el punto de mayor inflexión del Método del Codo (Inercia = 1,415.33) y se alcanza el máximo global del Coeficiente de Silueta (0.4197). "
+        "Al comparar con K=3 (Inercia = 1,885.41, Silueta = 0.4141), K=3 fusionaba en un solo grupo mixto a los indies digitales con los juegos de consola tradicional, "
+        "perdiendo la capacidad de distinguir los canales de venta. K=4 separa con total nitidez ambos modelos comerciales.",
+        bold_prefix="Evaluación de K, Justificación y Comparación de Modelos (Parte 4):"
     )
 
     # =========================================================================
-    # 6. RESULTADOS Y ANÁLISIS
+    # 6. ANÁLISIS E INTERPRETACIÓN DE RESULTADOS (PARTE 5 DE LA RÚBRICA)
     # =========================================================================
     pdf.add_page()
-    pdf.section_title("6", "Resultados y Análisis")
+    pdf.section_title("6", "Análisis e Interpretación de Resultados")
+
+    pdf.paragraph(
+        "A continuación se presenta la tabla comparativa consolidada con los centroides desescalados a unidades reales y la cantidad de registros por grupo:",
+        bold_prefix="Tabla Comparativa de los Grupos y Centroides:"
+    )
 
     # Tabla de Centroides formal
-    pdf.set_font("Arial", "B", 9)
+    pdf.set_font("Arial", "B", 8.5)
     pdf.set_fill_color(243, 244, 246)
     pdf.set_text_color(17, 24, 39)
     pdf.set_draw_color(209, 213, 219)
     
-    cols_c = [64, 21, 21, 21, 20, 23]
+    cols_c = [60, 22, 22, 22, 22, 24]
     pdf.cell(cols_c[0], 6, "Clúster Asignado", border=1, align="C", fill=True, new_x=XPos.RIGHT, new_y=YPos.TOP)
-    pdf.cell(cols_c[1], 6, "Venta Física", border=1, align="C", fill=True, new_x=XPos.RIGHT, new_y=YPos.TOP)
-    pdf.cell(cols_c[2], 6, "Venta Digital", border=1, align="C", fill=True, new_x=XPos.RIGHT, new_y=YPos.TOP)
+    pdf.cell(cols_c[1], 6, "V. Física", border=1, align="C", fill=True, new_x=XPos.RIGHT, new_y=YPos.TOP)
+    pdf.cell(cols_c[2], 6, "V. Digital", border=1, align="C", fill=True, new_x=XPos.RIGHT, new_y=YPos.TOP)
     pdf.cell(cols_c[3], 6, "Precio Medio", border=1, align="C", fill=True, new_x=XPos.RIGHT, new_y=YPos.TOP)
     pdf.cell(cols_c[4], 6, "Calif. Media", border=1, align="C", fill=True, new_x=XPos.RIGHT, new_y=YPos.TOP)
-    pdf.cell(cols_c[5], 6, "Proporción", border=1, align="C", fill=True, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+    pdf.cell(cols_c[5], 6, "Cantidad (%)", border=1, align="C", fill=True, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
 
     centroides = [
-        ("Superventas Globales (Blockbusters)", "8.69 M", "12.00 M", "$69.87 USD", "88.3 pts", "169 (18.4%)"),
-        ("Fracasos Comerciales y Bajo Rendimiento", "0.41 M", "0.50 M", "$54.78 USD", "54.1 pts", "224 (24.3%)"),
-        ("Coleccionables de Consola (Físico Fuerte)", "6.65 M", "2.50 M", "$59.99 USD", "84.2 pts", "210 (22.8%)"),
-        ("Éxitos Digitales e Indies Virales", "0.60 M", "7.80 M", "$34.70 USD", "82.3 pts", "317 (34.5%)")
+        ("Superventas Globales (Blockbusters)", "8.69 M", "12.39 M", "$69.99 USD", "87.7 pts", "169 (18.4%)"),
+        ("Fracasos Comerciales y Bajo Rendimiento", "0.41 M", "0.57 M", "$55.97 USD", "52.7 pts", "224 (24.3%)"),
+        ("Coleccionables de Consola (Físico Fuerte)", "6.65 M", "2.87 M", "$61.28 USD", "84.1 pts", "210 (22.8%)"),
+        ("Éxitos Digitales e Indies Virales", "0.60 M", "7.71 M", "$35.01 USD", "81.7 pts", "317 (34.5%)")
     ]
 
     pdf.set_font("Arial", "", 8)
     pdf.set_text_color(55, 65, 81)
     for c_n, c_f, c_d, c_p, c_ca, c_v in centroides:
-        pdf.cell(cols_c[0], 5.5, f"  {c_n}", border=1, align="L", new_x=XPos.RIGHT, new_y=YPos.TOP)
+        pdf.cell(cols_c[0], 5.5, f" {c_n}", border=1, align="L", new_x=XPos.RIGHT, new_y=YPos.TOP)
         pdf.cell(cols_c[1], 5.5, c_f, border=1, align="C", new_x=XPos.RIGHT, new_y=YPos.TOP)
         pdf.cell(cols_c[2], 5.5, c_d, border=1, align="C", new_x=XPos.RIGHT, new_y=YPos.TOP)
         pdf.cell(cols_c[3], 5.5, c_p, border=1, align="C", new_x=XPos.RIGHT, new_y=YPos.TOP)
@@ -277,7 +292,7 @@ def build_clean_documentation_pdf():
 
     pdf.ln(4)
 
-    # Gráficas de soporte en paralelo (SIN TEXTO 'Figura 3...')
+    # Gráficas de soporte en paralelo
     img_pca = "assets/3_pca_clusters.png"
     img_box = "assets/4_boxplot_ventas.png"
     y_g = pdf.get_y()
@@ -287,15 +302,16 @@ def build_clean_documentation_pdf():
         pdf.ln(58)
 
     pdf.paragraph(
-        "La reducción con PCA en 2 dimensiones retiene el 75.2% de la varianza total de la información (49.9% en PC1 y 25.4% en PC2). "
-        "En la proyección bidimensional se comprueba la nitidez de los grupos: los Blockbusters se proyectan hacia el extremo derecho de máxima recaudación, "
-        "los Éxitos Digitales en la parte superior de alta descarga, los Coleccionables de Consola en la parte inferior de demanda física, "
-        "y los Fracasos Comerciales agrupados de manera compacta en la esquina inferior izquierda.",
-        bold_prefix="Interpretación de los Agrupamientos:"
+        "Se proyectó el modelo en 2D mediante PCA reteniendo el 75.2% de la varianza total (49.9% en PC1 y 25.4% en PC2). "
+        "PC1 refleja el éxito comercial global, mientras que PC2 captura la polarización entre ventas físicas y digitales. "
+        "Los Éxitos Digitales (34.5%) venden 13 veces más por descarga que en disco a precio accesible ($35 USD). "
+        "Los Coleccionables de Consola (22.8%) dominan el canal físico en Switch y PlayStation ($61 USD). "
+        "Los Blockbusters (18.4%) lideran ambos canales a precio completo ($70 USD), y los Fracasos (24.3%) presentan ventas nulas en ambos formatos.",
+        bold_prefix="Características y Diferencias entre Grupos:"
     )
 
     # =========================================================================
-    # 7. DASHBOARD
+    # 7. DASHBOARD INTERACTIVO (STREAMLIT)
     # =========================================================================
     pdf.add_page()
     pdf.section_title("7", "Dashboard Interactivo (Streamlit)")
@@ -308,38 +324,38 @@ def build_clean_documentation_pdf():
     pdf.bullet("Página 2: Segmentación K-Means", "Exhibe la distribución porcentual en gráfico de dona (18.4% Blockbusters, 34.5% Éxitos Digitales, 22.8% Coleccionables y 24.3% Fracasos), proyección en PCA 2D, boxplot de ventas totales por clúster, relación de ventas vs. calificación y tabla de auditoría con buscador.")
     pdf.bullet("Barra Lateral de Filtros", "Permite alternar entre ambas páginas y filtrar simultáneamente por Clúster, Género, Plataforma, Slider de Precio (USD) y Slider de Calificación de la crítica.")
 
-    # Imagen de dona (SIN TEXTO 'Figura 4...')
+    # Imagen de dona
     img_dona = "assets/5_dona_proporcion.png"
     if os.path.exists(img_dona):
         pdf.image(img_dona, x=65, y=pdf.get_y(), w=80)
-        pdf.ln(70)
+        pdf.ln(68)
 
     # =========================================================================
-    # 8. CONCLUSIONES Y RECOMENDACIONES
+    # 8. CONCLUSIONES, RECOMENDACIONES Y LIMITACIONES
     # =========================================================================
     pdf.add_page()
-    pdf.section_title("8", "Conclusiones y Recomendaciones")
+    pdf.section_title("8", "Conclusiones, Recomendaciones y Limitaciones")
 
-    pdf.paragraph("Hallazgos Principales:")
-    pdf.bullet("1. Predominancia del Canal Digital", "El 34.5% de los videojuegos (Éxitos Digitales) vende 13 veces más por descarga digital que en formato físico (7.80 M vs. 0.60 M). Producir discos físicos para estos juegos representa una pérdida financiera directa.")
-    pdf.bullet("2. Concentración de Rentabilidad", "Menos del 20% del catálogo (Superventas Blockbusters) genera más de la mitad de los ingresos comerciales brutos globales.")
-    pdf.bullet("3. Tasa de Falla en Tiendas", "El 24.3% de los títulos lanzados es un fracaso comercial con ventas inferiores a 1 millón y calificaciones bajas (54 puntos), siendo el principal causante de inventario muerto.")
+    pdf.paragraph("Tres Hallazgos Principales (Parte 5):")
+    pdf.bullet("1. Predominancia del Canal Digital", "El 34.5% de los videojuegos (Éxitos Digitales) vende 13 veces más por descarga digital que en formato físico (7.71 M vs. 0.60 M). Producir discos físicos para estos juegos representa una pérdida financiera directa.")
+    pdf.bullet("2. Concentración de Rentabilidad", "Menos del 20% del catálogo (Superventas Blockbusters) genera más de la mitad de los ingresos comerciales brutos globales en ambos canales.")
+    pdf.bullet("3. Tasa de Falla en Tiendas", "El 24.3% de los títulos lanzados es un fracaso comercial con ventas inferiores a 0.6M y calificaciones reprobatorias (52.7 puntos), siendo la causa principal de inventario muerto.")
 
-    pdf.paragraph("Recomendaciones para la Toma de Decisiones:")
-    pdf.bullet("1. Política Cero Discos Físicos para Indies", "Comercializar los juegos del Clúster de Éxitos Digitales exclusivamente por internet, ahorrando el 100% de los costos de manufactura plástica y fletes.")
-    pdf.bullet("2. Producción Focalizada en Coleccionables", "Concentrar la impresión de cajas y ediciones especiales únicamente en juegos de consola de aventura y plataformas (Clúster de Coleccionables).")
-    pdf.bullet("3. Remates Rápidos para Títulos de Bajo Rendimiento", "Aplicar descuentos agresivos durante las primeras cuatro semanas para los títulos del Clúster de Fracasos, recuperando liquidez antes de que su valor comercial decaiga totalmente.")
+    pdf.paragraph("Tres Recomendaciones Estratégicas Basadas en Resultados (Parte 5):")
+    pdf.bullet("1. Política Cero Discos Físicos para Indies", "Comercializar los juegos del Clúster de Éxitos Digitales exclusivamente por internet, ahorrando el 100% de los costos de manufactura plástica y logística.")
+    pdf.bullet("2. Producción Focalizada en Coleccionables", "Concentrar la impresión de cajas y cartuchos únicamente en juegos de consola tradicional (Switch / PlayStation) donde los usuarios exigen el formato físico.")
+    pdf.bullet("3. Liquidación Rápida de Fracasos Comerciales", "Aplicar descuentos agresivos del 50% al 70% durante las primeras semanas para los títulos del Clúster de Fracasos, recuperando liquidez antes de que su valor comercial decaiga totalmente.")
 
     pdf.paragraph(
-        "K-Means presupone grupos hiper-esféricos de varianza similar y no contempla variaciones estacionales (ofertas de fin de año o Black Friday). "
-        "Como trabajo futuro, se recomienda integrar modelos temporales y algoritmos basados en densidad como DBSCAN.",
-        bold_prefix="Limitaciones del Modelo:"
+        "K-Means presupone grupos hiper-esféricos de varianza similar y no contempla variaciones temporales estacionales (como ofertas de fin de año o Black Friday). "
+        "Asimismo, no modela relaciones de causalidad directa. Como trabajo futuro, se recomienda integrar modelos de series de tiempo y algoritmos basados en densidad como DBSCAN.",
+        bold_prefix="Limitaciones del Modelo Desarrollado (Parte 5):"
     )
 
     output_path = "docs/Documentacion_Oficial_Proyecto_KMeans_Videojuegos.pdf"
     os.makedirs("docs", exist_ok=True)
     pdf.output(output_path)
-    print(f"Documento oficial limpio sin encabezados, sin pies y sin leyendas generado: {output_path}")
+    print(f"Documento oficial actualizado exitosamente: {output_path}")
 
 if __name__ == "__main__":
     build_clean_documentation_pdf()
