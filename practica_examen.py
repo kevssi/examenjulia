@@ -1,187 +1,192 @@
-"""
-PRÁCTICA EXAMEN - RESPUESTAS DE REGISTROS (PARTES 2, 3, 4 Y 5)
-Materia: Extracción de Conocimiento en Bases de Datos
-Alumno : Kevin Uriel Silva Talamantes | Grupo: TI3-9 | Maestra: Julia García
-"""
-
-import os
-import numpy as np
 import pandas as pd
-from sklearn.preprocessing import StandardScaler
+import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
-from sklearn.decomposition import PCA
-from sklearn.metrics import silhouette_score, calinski_harabasz_score, davies_bouldin_score
+from sklearn.preprocessing import StandardScaler
 
-# Configuración para mostrar tablas completas de registros en terminal
-pd.set_option('display.max_columns', None)
-pd.set_option('display.width', 1000)
-pd.set_option('display.precision', 2)
-
-# Ruta del dataset original
-in_path = "data/videojuegos_ventas_original.csv"
-if not os.path.exists(in_path):
-    in_path = "../data/videojuegos_ventas_original.csv"
-
-# ==============================================================================================
+# ==========================================================
 # PARTE 2. OBTENCIÓN Y EXPLORACIÓN DEL DATASET
-# ==============================================================================================
-print("\n" + "=" * 95)
-print(" PARTE 2. OBTENCIÓN Y EXPLORACIÓN DEL DATASET")
-print("=" * 95)
+# ==========================================================
 
-# Carga del dataset original
-df_raw = pd.read_csv(in_path)
+# 1. Cargar el dataset
+try:
+    df = pd.read_csv("videojuegos_ventas_original.csv")
+except FileNotFoundError:
+    df = pd.read_csv("data/videojuegos_ventas_original.csv")
 
-print("\n>>> PRIMEROS 10 REGISTROS (df_raw.head(10)):")
-print("-" * 95)
-cols_vista = ["id_juego", "titulo", "genero", "plataforma", "ventas_fisicas_millones", 
-              "ventas_digitales_millones", "precio_lanzamiento_usd", "calificacion_critica", "horas_juego"]
-print(df_raw[cols_vista].head(10).to_string(index=True))
+print("=== Datos originales del dataset ===")
+print(df.head(10))
 
-print("\n>>> DIMENSIONES, COLUMNAS Y TIPOS DE DATOS (df_raw.shape & df_raw.dtypes):")
-print("-" * 95)
-print(f"Dimensiones: {df_raw.shape[0]} filas x {df_raw.shape[1]} columnas\n")
-print(df_raw.dtypes.to_string())
+# 2. Dimensiones, columnas y tipos de datos
+print("\n--- Dimensiones del dataset ---")
+print(f"Filas: {df.shape[0]}, Columnas: {df.shape[1]}")
 
-print("\n>>> ESTADÍSTICAS DESCRIPTIVAS DE LOS REGISTROS (df_raw.describe()):")
-print("-" * 95)
-print(df_raw.describe().to_string())
+print("\n--- Columnas y tipos de datos ---")
+print(df.dtypes)
 
-print("\n>>> VALORES NULOS Y REGISTROS DUPLICADOS:")
-print("-" * 95)
-print(f"Registros duplicados: {df_raw.duplicated().sum()}")
-print("\nValores nulos por columna:")
-print(df_raw.isnull().sum().to_string())
+# 3. Estadísticas descriptivas
+print("\n--- Estadísticas descriptivas ---")
+print(df.describe())
 
-# ==============================================================================================
+# 4. Identificar valores nulos y registros duplicados
+print("\n--- Valores nulos por columna ---")
+print(df.isnull().sum())
+
+print(f"\nTotal de registros duplicados: {df.duplicated().sum()}")
+
+
+# ==========================================================
 # PARTE 3. LIMPIEZA Y PREPARACIÓN DE DATOS
-# ==============================================================================================
-print("\n" + "=" * 95)
-print(" PARTE 3. LIMPIEZA Y PREPARACIÓN DE DATOS")
-print("=" * 95)
+# ==========================================================
 
-df_clean = df_raw.copy()
-vars_num = ["ventas_fisicas_millones", "ventas_digitales_millones", 
-            "precio_lanzamiento_usd", "calificacion_critica", "horas_juego"]
+# 5. Tratamiento de duplicados, inconsistencias y valores nulos
+df_limpio = df.drop_duplicates().copy()
 
-# 1. Eliminación de duplicados
-n_dup_antes = df_clean.duplicated().sum()
-df_clean = df_clean.drop_duplicates().reset_index(drop=True)
+caracteristicas = [
+    "ventas_fisicas_millones",
+    "ventas_digitales_millones",
+    "precio_lanzamiento_usd",
+    "calificacion_critica",
+    "horas_juego"
+]
 
-# 2. Corrección de negativos (inconsistencias)
-for col in vars_num:
-    df_clean[col] = df_clean[col].abs()
+# Corregir valores negativos (inconsistencias)
+for col in caracteristicas:
+    df_limpio[col] = df_limpio[col].abs()
 
-# 3. Imputación contextual de nulos con mediana por género
-for col in vars_num:
-    df_clean[col] = df_clean[col].fillna(df_clean.groupby("genero")[col].transform("median"))
+# Imputar valores nulos con la mediana
+for col in caracteristicas:
+    df_limpio[col] = df_limpio[col].fillna(df_limpio.groupby("genero")[col].transform("median"))
 
-# 4. Cálculo de ventas totales
-df_clean["ventas_totales_millones"] = (df_clean["ventas_fisicas_millones"] + df_clean["ventas_digitales_millones"]).round(2)
+# Calcular ventas totales
+df_limpio["ventas_totales_millones"] = (df_limpio["ventas_fisicas_millones"] + df_limpio["ventas_digitales_millones"]).round(2)
 
-# 5. Escalamiento con StandardScaler
+print("\n--- Resultados tras la limpieza ---")
+print(f"Registros iniciales: {len(df)}")
+print(f"Registros limpios finales: {len(df_limpio)}")
+print(f"Valores nulos restantes: {df_limpio[caracteristicas].isnull().sum().sum()}")
+print(df_limpio[caracteristicas].describe())
+
+# 6. Escalamiento con StandardScaler
 scaler = StandardScaler()
-X_scaled = scaler.fit_transform(df_clean[vars_num])
+X = df_limpio[caracteristicas]
+X_escalado = scaler.fit_transform(X)
 
-print(">>> PRIMEROS 10 REGISTROS LIMPIOS Y PREPARADOS (df_clean.head(10)):")
-print("-" * 95)
-print(df_clean[cols_vista].head(10).to_string(index=True))
+print("\n--- Variables escaladas con StandardScaler (primeras 5 muestras) ---")
+df_escalado = pd.DataFrame(X_escalado, columns=caracteristicas)
+print(df_escalado.head(5))
 
-print("\n>>> ESTADÍSTICAS DESCRIPTIVAS TRAS LA LIMPIEZA (df_clean.describe()):")
-print("-" * 95)
-print(df_clean[vars_num].describe().to_string())
 
-print("\n>>> RESUMEN NUMÉRICO DE LIMPIEZA:")
-print("-" * 95)
-print(f"Registros iniciales     : {df_raw.shape[0]}")
-print(f"Duplicados eliminados   : {n_dup_antes}")
-print(f"Registros limpios finales: {df_clean.shape[0]}")
-print(f"Valores nulos restantes : {df_clean[vars_num].isnull().sum().sum()}")
-print(f"Valores negativos       : {(df_clean[vars_num] < 0).sum().sum()}")
-
-# ==============================================================================================
+# ==========================================================
 # PARTE 4. IMPLEMENTACIÓN DEL ALGORITMO K-MEANS
-# ==============================================================================================
-print("\n" + "=" * 95)
-print(" PARTE 4. IMPLEMENTACIÓN DEL ALGORITMO K-MEANS")
-print("=" * 95)
+# ==========================================================
 
-# Evaluación de K de 2 a 8
-eval_k = []
+# 7. Evaluar diferentes valores de K (Método del Codo / Inercia)
+print("\n--- Evaluación de valores de K (K=2 a K=8) ---")
+evaluaciones = []
 for k in range(2, 9):
     km_test = KMeans(n_clusters=k, random_state=42, n_init=10)
-    lbls = km_test.fit_predict(X_scaled)
-    sil = silhouette_score(X_scaled, lbls)
-    eval_k.append({"K": k, "Inercia_SSE": round(km_test.inertia_, 2), "Silhouette_Score": round(sil, 4)})
+    km_test.fit(X_escalado)
+    evaluaciones.append({"K": k, "Inercia (SSE)": round(km_test.inertia_, 2)})
+    print(f"K = {k} -> Inercia (SSE): {km_test.inertia_:.2f}")
 
-df_eval = pd.DataFrame(eval_k)
-print(">>> EVALUACIÓN DE 7 VALORES DE K (K=2 a K=8):")
-print("-" * 95)
-print(df_eval.to_string(index=False))
+# 8. Entrenar el modelo final K-Means (K=4)
+modelo = KMeans(n_clusters=4, random_state=42, n_init=10)
+df_limpio["Grupo"] = modelo.fit_predict(X_escalado)
 
-# Entrenamiento modelo final K=4
-kmeans = KMeans(n_clusters=4, random_state=42, n_init=10)
-df_clean["Cluster"] = kmeans.fit_predict(X_scaled)
+print("\n--- Modelo final entrenado exitosamente con K=4 ---")
+print(f"Inercia final (SSE): {modelo.inertia_:.2f}")
+print(f"Número de iteraciones: {modelo.n_iter_}")
 
-# Reducción PCA 2D
-pca = PCA(n_components=2, random_state=42)
-X_pca = pca.fit_transform(X_scaled)
-df_clean["pca_x"] = X_pca[:, 0].round(3)
-df_clean["pca_y"] = X_pca[:, 1].round(3)
 
-# Mapeo de nombres
-cluster_means = df_clean.groupby("Cluster")[vars_num].mean()
-cluster_names = {}
-for c_id, row in cluster_means.iterrows():
-    fis = row["ventas_fisicas_millones"]
-    dig = row["ventas_digitales_millones"]
-    if fis > 5.0 and dig > 8.0:
-        cluster_names[c_id] = "Superventas Globales (Blockbusters)"
-    elif dig > 5.0 and fis < 3.0:
-        cluster_names[c_id] = "Éxitos Digitales e Indies Virales"
-    elif fis > 4.0 and dig < 5.0:
-        cluster_names[c_id] = "Coleccionables de Consola (Físico Fuerte)"
-    else:
-        cluster_names[c_id] = "Fracasos Comerciales y Bajo Rendimiento"
-
-df_clean["Cluster_Nombre"] = df_clean["Cluster"].map(cluster_names)
-
-print("\n>>> CANTIDAD DE REGISTROS POR CLÚSTER:")
-print("-" * 95)
-conteo = df_clean["Cluster_Nombre"].value_counts()
-df_conteo = pd.DataFrame({
-    "Clúster": conteo.index,
-    "Registros": conteo.values,
-    "Porcentaje": ((conteo.values / len(df_clean)) * 100).round(1)
-})
-print(df_conteo.to_string(index=False))
-
-print("\n>>> CENTROIDES OBTENIDOS (PROMEDIOS REALES POR CLÚSTER):")
-print("-" * 95)
-print(df_clean.groupby("Cluster_Nombre")[vars_num].mean().to_string())
-
-# ==============================================================================================
+# ==========================================================
 # PARTE 5. ANÁLISIS E INTERPRETACIÓN DE RESULTADOS
-# ==============================================================================================
-print("\n" + "=" * 95)
-print(" PARTE 5. ANÁLISIS E INTERPRETACIÓN DE RESULTADOS")
-print("=" * 95)
+# ==========================================================
 
-print(">>> TABLA COMPARATIVA CONSOLIDADA DE LOS GRUPOS:")
-print("-" * 95)
-tabla_resumen = df_clean.groupby("Cluster_Nombre").agg(
-    Registros=("id_juego", "count"),
-    Vta_Fisica_Media=("ventas_fisicas_millones", "mean"),
-    Vta_Digital_Media=("ventas_digitales_millones", "mean"),
-    Precio_Medio=("precio_lanzamiento_usd", "mean"),
-    Calif_Media=("calificacion_critica", "mean"),
-    Horas_Media=("horas_juego", "mean")
-).reset_index()
-print(tabla_resumen.to_string(index=False))
+# 9. Asignar nombres descriptivos a cada clúster
+# Calculamos los centroides en valores reales (desescalados)
+centroides_reales = scaler.inverse_transform(modelo.cluster_centers_)
+df_centroides = pd.DataFrame(centroides_reales, columns=caracteristicas)
 
-print("\n>>> MUESTRA DE REGISTROS CON CLÚSTER ASIGNADO (PRIMEROS 15 REGISTROS):")
-print("-" * 95)
-cols_final = ["titulo", "genero", "plataforma", "ventas_fisicas_millones", "ventas_digitales_millones", "Cluster_Nombre"]
-print(df_clean[cols_final].head(15).to_string(index=True))
+mapeo_nombres = {}
+for i, fila in df_centroides.iterrows():
+    vf = fila["ventas_fisicas_millones"]
+    vd = fila["ventas_digitales_millones"]
+    if vf > 5.0 and vd > 8.0:
+        mapeo_nombres[i] = "Superventas Globales (Blockbusters)"
+    elif vd > 5.0 and vf < 3.0:
+        mapeo_nombres[i] = "Éxitos Digitales e Indies Virales"
+    elif vf > 4.0 and vd < 5.0:
+        mapeo_nombres[i] = "Coleccionables de Consola (Físico Fuerte)"
+    else:
+        mapeo_nombres[i] = "Fracasos Comerciales y Bajo Rendimiento"
 
-print("\n" + "=" * 95)
+df_limpio["Clasificacion"] = df_limpio["Grupo"].map(mapeo_nombres)
+df_centroides["Clasificacion"] = df_centroides.index.map(mapeo_nombres)
+
+# 10. Centroides obtenidos (en unidades reales)
+print("\n=== Centroides del modelo (Promedios reales por clúster) ===")
+print(df_centroides.to_string(index=True))
+
+# 11. Conteo de registros por clúster
+print("\n=== Cantidad de videojuegos por grupo / clasificación ===")
+print(df_limpio["Clasificacion"].value_counts())
+
+# 12. Tabla comparativa de los grupos
+print("\n=== Tabla comparativa de grupos (Promedios) ===")
+tabla_resumen = df_limpio.groupby("Clasificacion")[caracteristicas].mean()
+print(tabla_resumen.to_string())
+
+# 13. Primeros 10 videojuegos con su clasificación asignada
+print("\n=== Muestra de videojuegos con clasificación asignada ===")
+cols_mostrar = ["titulo", "genero", "plataforma", "ventas_fisicas_millones", "ventas_digitales_millones", "Clasificacion"]
+print(df_limpio[cols_mostrar].head(10).to_string())
+
+
+# ==========================================================
+# GRÁFICA DE LOS AGRUPAMIENTOS
+# ==========================================================
+
+# 14. Gráfica de dispersión con centroides (Ventas Físicas vs Ventas Digitales)
+plt.figure(figsize=(10, 6))
+
+colores = {
+    "Superventas Globales (Blockbusters)": "#d7191c",
+    "Éxitos Digitales e Indies Virales": "#2b83ba",
+    "Coleccionables de Consola (Físico Fuerte)": "#2ca02c",
+    "Fracasos Comerciales y Bajo Rendimiento": "#7f7f7f"
+}
+
+for tipo, color in colores.items():
+    sub_df = df_limpio[df_limpio["Clasificacion"] == tipo]
+    plt.scatter(
+        sub_df["ventas_fisicas_millones"],
+        sub_df["ventas_digitales_millones"],
+        color=color,
+        s=60,
+        alpha=0.7,
+        label=tipo
+    )
+
+# Centroides (proyectados en Ventas Físicas vs Ventas Digitales)
+for grupo_id, nombre in mapeo_nombres.items():
+    c_fis = df_centroides.loc[grupo_id, "ventas_fisicas_millones"]
+    c_dig = df_centroides.loc[grupo_id, "ventas_digitales_millones"]
+    plt.scatter(
+        c_fis,
+        c_dig,
+        color="black",
+        marker="X",
+        s=200,
+        linewidths=2,
+        label="Centroides" if grupo_id == 0 else ""
+    )
+
+plt.title("Clasificación de Videojuegos con K-Means (Ventas Físicas vs Digitales)", fontsize=13, fontweight="bold")
+plt.xlabel("Ventas Físicas (Millones de Copias)", fontsize=11)
+plt.ylabel("Ventas Digitales (Millones de Copias)", fontsize=11)
+plt.legend()
+plt.grid(True)
+plt.tight_layout()
+plt.savefig("grafica_kmeans_videojuegos.png", dpi=300)
+print("\nGráfica guardada como 'grafica_kmeans_videojuegos.png'")
+plt.show()
