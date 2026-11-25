@@ -164,11 +164,11 @@ def build_clean_documentation_pdf():
     pdf.set_text_color(17, 24, 39)
     pdf.set_draw_color(209, 213, 219)
     
-    cols = [38, 22, 24, 86]
-    pdf.cell(cols[0], 6, "Variable", 1, 0, "C", True)
-    pdf.cell(cols[1], 6, "Tipo", 1, 0, "C", True)
-    pdf.cell(cols[2], 6, "Escala / Rango", 1, 0, "C", True)
-    pdf.cell(cols[3], 6, "Descripción", 1, 1, "C", True)
+    cols = [42, 20, 24, 84]
+    pdf.cell(cols[0], 6, "Variable", border=1, align="C", fill=True, new_x=XPos.RIGHT, new_y=YPos.TOP)
+    pdf.cell(cols[1], 6, "Tipo", border=1, align="C", fill=True, new_x=XPos.RIGHT, new_y=YPos.TOP)
+    pdf.cell(cols[2], 6, "Escala / Rango", border=1, align="C", fill=True, new_x=XPos.RIGHT, new_y=YPos.TOP)
+    pdf.cell(cols[3], 6, "Descripción", border=1, align="C", fill=True, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
 
     vars_info = [
         ("id_juego", "Texto", "GAME-0001...", "Identificador único asignado a cada videojuego."),
@@ -183,13 +183,13 @@ def build_clean_documentation_pdf():
         ("horas_juego", "Numérico", "5 a 120 horas", "Duración media estimada de la campaña principal.")
     ]
 
-    pdf.set_font("Helvetica", "", 7.8)
+    pdf.set_font("Helvetica", "", 7.5)
     pdf.set_text_color(55, 65, 81)
     for v_nom, v_tipo, v_rng, v_desc in vars_info:
-        pdf.cell(cols[0], 5.2, f" {v_nom}", 1, 0, "L")
-        pdf.cell(cols[1], 5.2, v_tipo, 1, 0, "C")
-        pdf.cell(cols[2], 5.2, v_rng, 1, 0, "C")
-        pdf.cell(cols[3], 5.2, f" {v_desc}", 1, 1, "L")
+        pdf.cell(cols[0], 5.2, f" {v_nom}", border=1, align="L", new_x=XPos.RIGHT, new_y=YPos.TOP)
+        pdf.cell(cols[1], 5.2, v_tipo, border=1, align="C", new_x=XPos.RIGHT, new_y=YPos.TOP)
+        pdf.cell(cols[2], 5.2, v_rng, border=1, align="C", new_x=XPos.RIGHT, new_y=YPos.TOP)
+        pdf.cell(cols[3], 5.2, f" {v_desc}", border=1, align="L", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
 
     pdf.ln(5)
 
@@ -239,13 +239,13 @@ def build_clean_documentation_pdf():
     pdf.set_text_color(17, 24, 39)
     pdf.set_draw_color(209, 213, 219)
     
-    cols_c = [48, 22, 22, 22, 20, 36]
-    pdf.cell(cols_c[0], 6, "Clúster Asignado", 1, 0, "C", True)
-    pdf.cell(cols_c[1], 6, "Venta Física", 1, 0, "C", True)
-    pdf.cell(cols_c[2], 6, "Venta Digital", 1, 0, "C", True)
-    pdf.cell(cols_c[3], 6, "Precio Medio", 1, 0, "C", True)
-    pdf.cell(cols_c[4], 6, "Calif. Media", 1, 0, "C", True)
-    pdf.cell(cols_c[5], 6, "Proporción", 1, 1, "C", True)
+    cols_c = [64, 21, 21, 21, 20, 23]
+    pdf.cell(cols_c[0], 6, "Clúster Asignado", border=1, align="C", fill=True, new_x=XPos.RIGHT, new_y=YPos.TOP)
+    pdf.cell(cols_c[1], 6, "Venta Física", border=1, align="C", fill=True, new_x=XPos.RIGHT, new_y=YPos.TOP)
+    pdf.cell(cols_c[2], 6, "Venta Digital", border=1, align="C", fill=True, new_x=XPos.RIGHT, new_y=YPos.TOP)
+    pdf.cell(cols_c[3], 6, "Precio Medio", border=1, align="C", fill=True, new_x=XPos.RIGHT, new_y=YPos.TOP)
+    pdf.cell(cols_c[4], 6, "Calif. Media", border=1, align="C", fill=True, new_x=XPos.RIGHT, new_y=YPos.TOP)
+    pdf.cell(cols_c[5], 6, "Proporción", border=1, align="C", fill=True, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
 
     centroides = [
         ("Superventas Globales (Blockbusters)", "8.69 M", "12.00 M", "$69.87 USD", "88.3 pts", "169 (18.4%)"),
@@ -254,15 +254,15 @@ def build_clean_documentation_pdf():
         ("Éxitos Digitales e Indies Virales", "0.60 M", "7.80 M", "$34.70 USD", "82.3 pts", "317 (34.5%)")
     ]
 
-    pdf.set_font("Helvetica", "", 7.8)
+    pdf.set_font("Helvetica", "", 7.2)
     pdf.set_text_color(55, 65, 81)
     for c_n, c_f, c_d, c_p, c_ca, c_v in centroides:
-        pdf.cell(cols_c[0], 5.5, f" {c_n}", 1, 0, "L")
-        pdf.cell(cols_c[1], 5.5, c_f, 1, 0, "C")
-        pdf.cell(cols_c[2], 5.5, c_d, 1, 0, "C")
-        pdf.cell(cols_c[3], 5.5, c_p, 1, 0, "C")
-        pdf.cell(cols_c[4], 5.5, c_ca, 1, 0, "C")
-        pdf.cell(cols_c[5], 5.5, f" {c_v}", 1, 1, "C")
+        pdf.cell(cols_c[0], 5.5, f"  {c_n}", border=1, align="L", new_x=XPos.RIGHT, new_y=YPos.TOP)
+        pdf.cell(cols_c[1], 5.5, c_f, border=1, align="C", new_x=XPos.RIGHT, new_y=YPos.TOP)
+        pdf.cell(cols_c[2], 5.5, c_d, border=1, align="C", new_x=XPos.RIGHT, new_y=YPos.TOP)
+        pdf.cell(cols_c[3], 5.5, c_p, border=1, align="C", new_x=XPos.RIGHT, new_y=YPos.TOP)
+        pdf.cell(cols_c[4], 5.5, c_ca, border=1, align="C", new_x=XPos.RIGHT, new_y=YPos.TOP)
+        pdf.cell(cols_c[5], 5.5, f" {c_v}", border=1, align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
 
     pdf.ln(4)
 
