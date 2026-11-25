@@ -13,6 +13,9 @@ class CleanRubricPDF(FPDF):
         super().__init__(orientation="P", unit="mm", format="A4")
         self.set_auto_page_break(auto=True, margin=15)
         self.set_margins(left=20, top=18, right=20)
+        # Registrar fuentes TrueType Arial nativas de Windows
+        self.add_font("Arial", "", "C:/Windows/Fonts/arial.ttf")
+        self.add_font("Arial", "B", "C:/Windows/Fonts/arialbd.ttf")
 
     # SIN ENCABEZADO
     def header(self):
@@ -23,22 +26,22 @@ class CleanRubricPDF(FPDF):
         pass
 
     def part_title(self, num_str, title_str):
-        self.ln(5)
-        self.set_font("Helvetica", "B", 11)
+        self.ln(4)
+        self.set_font("Arial", "B", 13.5)
         self.set_text_color(17, 24, 39)
-        self.cell(0, 6, f"PARTE {num_str}. {title_str.upper()}", align="L", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+        self.cell(0, 7, f"PARTE {num_str}. {title_str.upper()}", align="L", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
         self.set_draw_color(209, 213, 219)
         self.set_line_width(0.4)
         self.line(20, self.get_y(), 190, self.get_y())
         self.ln(4)
 
     def item_block(self, item_title, content_text):
-        self.set_font("Helvetica", "B", 9)
+        self.set_font("Arial", "B", 12)
         self.set_text_color(17, 24, 39)
-        self.write(5, f"- {item_title}\n")
-        self.set_font("Helvetica", "", 8.6)
+        self.write(5.8, f"- {item_title}\n")
+        self.set_font("Arial", "", 12)
         self.set_text_color(55, 65, 81)
-        self.write(4.5, f"  Respuesta: {content_text}\n\n")
+        self.write(5.8, f"  Respuesta: {content_text}\n\n")
 
 def build_clean_rubric_pdf():
     pdf = CleanRubricPDF()
@@ -50,15 +53,15 @@ def build_clean_rubric_pdf():
     pdf.add_page()
     pdf.ln(30)
 
-    pdf.set_font("Helvetica", "B", 16)
+    pdf.set_font("Arial", "B", 18)
     pdf.set_text_color(17, 24, 39)
-    pdf.cell(0, 8, "GUIA DE RESPUESTAS A LA RUBRICA DE EVALUACION", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-    pdf.set_font("Helvetica", "B", 12.5)
+    pdf.cell(0, 9, "GUIA DE RESPUESTAS A LA RUBRICA DE EVALUACION", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+    pdf.set_font("Arial", "B", 14)
     pdf.set_text_color(31, 41, 55)
-    pdf.cell(0, 7, "Ventas del Formato Físico y Digital de los Videojuegos", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-    pdf.set_font("Helvetica", "", 9.5)
+    pdf.cell(0, 8, "Ventas del Formato Físico y Digital de los Videojuegos", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+    pdf.set_font("Arial", "B", 12)
     pdf.set_text_color(107, 114, 128)
-    pdf.cell(0, 6, "Segmentación con Algoritmo No Supervisado K-Means (Partes 1 a 8)", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+    pdf.cell(0, 7, "Segmentación con Algoritmo No Supervisado K-Means (Partes 1 a 8)", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
 
     pdf.ln(8)
     pdf.set_draw_color(209, 213, 219)
@@ -77,12 +80,12 @@ def build_clean_rubric_pdf():
 
     for etiqueta, valor in campos:
         pdf.set_x(45)
-        pdf.set_font("Helvetica", "B", 10)
+        pdf.set_font("Arial", "B", 12)
         pdf.set_text_color(31, 41, 55)
-        pdf.cell(30, 7, f"{etiqueta}:", new_x=XPos.RIGHT, new_y=YPos.TOP)
-        pdf.set_font("Helvetica", "", 10)
+        pdf.cell(32, 7.5, f"{etiqueta}:", new_x=XPos.RIGHT, new_y=YPos.TOP)
+        pdf.set_font("Arial", "", 12)
         pdf.set_text_color(55, 65, 81)
-        pdf.cell(0, 7, valor, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+        pdf.cell(0, 7.5, valor, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
         pdf.ln(2)
 
     # =========================================================================

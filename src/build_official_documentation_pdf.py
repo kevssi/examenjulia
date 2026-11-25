@@ -13,6 +13,9 @@ class CleanDocumentPDF(FPDF):
         super().__init__(orientation="P", unit="mm", format="A4")
         self.set_auto_page_break(auto=True, margin=15)
         self.set_margins(left=20, top=18, right=20)
+        # Registrar fuentes TrueType Arial nativas de Windows
+        self.add_font("Arial", "", "C:/Windows/Fonts/arial.ttf")
+        self.add_font("Arial", "B", "C:/Windows/Fonts/arialbd.ttf")
 
     # 1. SIN ENCABEZADO
     def header(self):
@@ -23,34 +26,34 @@ class CleanDocumentPDF(FPDF):
         pass
 
     def section_title(self, num_str, title_str):
-        self.ln(5)
-        self.set_font("Helvetica", "B", 11)
+        self.ln(4)
+        self.set_font("Arial", "B", 13.5)
         self.set_text_color(17, 24, 39) # Negro
-        self.cell(0, 6, f"{num_str}. {title_str}", align="L", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-        self.set_draw_color(229, 231, 235)
-        self.set_line_width(0.3)
+        self.cell(0, 7, f"{num_str}. {title_str}", align="L", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+        self.set_draw_color(209, 213, 219)
+        self.set_line_width(0.4)
         self.line(20, self.get_y(), 190, self.get_y())
         self.ln(4)
 
     def paragraph(self, text, bold_prefix=""):
-        self.set_font("Helvetica", "", 9)
+        self.set_font("Arial", "", 12)
         self.set_text_color(55, 65, 81)
         if bold_prefix:
-            self.set_font("Helvetica", "B", 9)
+            self.set_font("Arial", "B", 12)
             self.set_text_color(17, 24, 39)
-            self.write(4.8, bold_prefix + " ")
-            self.set_font("Helvetica", "", 9)
+            self.write(5.8, bold_prefix + " ")
+            self.set_font("Arial", "", 12)
             self.set_text_color(55, 65, 81)
-        self.write(4.8, text + "\n\n")
+        self.write(5.8, text + "\n\n")
 
     def bullet(self, title, desc):
         # Flujo continuo natural para evitar CUALQUIER solapamiento horizontal
-        self.set_font("Helvetica", "B", 9)
+        self.set_font("Arial", "B", 12)
         self.set_text_color(17, 24, 39)
-        self.write(4.8, f"- {title}: ")
-        self.set_font("Helvetica", "", 9)
+        self.write(5.8, f"- {title}: ")
+        self.set_font("Arial", "", 12)
         self.set_text_color(55, 65, 81)
-        self.write(4.8, desc + "\n\n")
+        self.write(5.8, desc + "\n\n")
 
 
 def build_clean_documentation_pdf():
@@ -64,13 +67,14 @@ def build_clean_documentation_pdf():
     pdf.ln(30)
 
     # Título principal
-    pdf.set_font("Helvetica", "B", 16)
+    pdf.set_font("Arial", "B", 18)
     pdf.set_text_color(17, 24, 39)
-    pdf.cell(0, 8, "PROYECTO INTEGRADOR", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-    pdf.set_font("Helvetica", "B", 13.5)
+    pdf.cell(0, 9, "PROYECTO INTEGRADOR", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+    pdf.set_font("Arial", "B", 14)
     pdf.set_text_color(31, 41, 55)
-    pdf.cell(0, 7, "Ventas del Formato Físico y Digital de los Videojuegos", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-    pdf.cell(0, 6, "mediante Algoritmo No Supervisado K-Means", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+    pdf.cell(0, 8, "Ventas del Formato Físico y Digital de los Videojuegos", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+    pdf.set_font("Arial", "B", 12)
+    pdf.cell(0, 7, "mediante Algoritmo No Supervisado K-Means", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
 
     pdf.ln(8)
     pdf.set_draw_color(209, 213, 219)
@@ -90,12 +94,12 @@ def build_clean_documentation_pdf():
 
     for etiqueta, valor in campos:
         pdf.set_x(45)
-        pdf.set_font("Helvetica", "B", 10)
+        pdf.set_font("Arial", "B", 12)
         pdf.set_text_color(31, 41, 55)
-        pdf.cell(30, 7, f"{etiqueta}:", new_x=XPos.RIGHT, new_y=YPos.TOP)
-        pdf.set_font("Helvetica", "", 10)
+        pdf.cell(32, 7.5, f"{etiqueta}:", new_x=XPos.RIGHT, new_y=YPos.TOP)
+        pdf.set_font("Arial", "", 12)
         pdf.set_text_color(55, 65, 81)
-        pdf.cell(0, 7, valor, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+        pdf.cell(0, 7.5, valor, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
         pdf.ln(2)
 
     # =========================================================================
@@ -159,7 +163,7 @@ def build_clean_documentation_pdf():
     )
 
     # Tabla limpia de variables
-    pdf.set_font("Helvetica", "B", 8)
+    pdf.set_font("Arial", "B", 9)
     pdf.set_fill_color(243, 244, 246)
     pdf.set_text_color(17, 24, 39)
     pdf.set_draw_color(209, 213, 219)
@@ -183,7 +187,7 @@ def build_clean_documentation_pdf():
         ("horas_juego", "Numérico", "5 a 120 horas", "Duración media estimada de la campaña principal.")
     ]
 
-    pdf.set_font("Helvetica", "", 7.5)
+    pdf.set_font("Arial", "", 8)
     pdf.set_text_color(55, 65, 81)
     for v_nom, v_tipo, v_rng, v_desc in vars_info:
         pdf.cell(cols[0], 5.2, f" {v_nom}", border=1, align="L", new_x=XPos.RIGHT, new_y=YPos.TOP)
@@ -234,7 +238,7 @@ def build_clean_documentation_pdf():
     pdf.section_title("6", "Resultados y Análisis")
 
     # Tabla de Centroides formal
-    pdf.set_font("Helvetica", "B", 8)
+    pdf.set_font("Arial", "B", 9)
     pdf.set_fill_color(243, 244, 246)
     pdf.set_text_color(17, 24, 39)
     pdf.set_draw_color(209, 213, 219)
@@ -254,7 +258,7 @@ def build_clean_documentation_pdf():
         ("Éxitos Digitales e Indies Virales", "0.60 M", "7.80 M", "$34.70 USD", "82.3 pts", "317 (34.5%)")
     ]
 
-    pdf.set_font("Helvetica", "", 7.2)
+    pdf.set_font("Arial", "", 8)
     pdf.set_text_color(55, 65, 81)
     for c_n, c_f, c_d, c_p, c_ca, c_v in centroides:
         pdf.cell(cols_c[0], 5.5, f"  {c_n}", border=1, align="L", new_x=XPos.RIGHT, new_y=YPos.TOP)
