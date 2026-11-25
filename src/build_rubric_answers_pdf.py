@@ -191,6 +191,10 @@ def build_clean_rubric_pdf():
         "Se identificaron outliers legítimos en juegos con más de 20M de ventas (Blockbusters). No se eliminaron porque representan fenómenos comerciales reales indispensables para el análisis."
     )
     pdf.item_block(
+        "Aplicar transformaciones o codificaciones cuando sea necesario",
+        "Se calculó la variable agregada 'ventas_totales_millones' (físicas + digitales), se corrigieron inconsistencias de signo con np.abs(), y se mantuvieron las 5 variables continuas cuantitativas para garantizar el cálculo geométrico euclidiano directo sin inducir distorsiones de dispersión."
+    )
+    pdf.item_block(
         "Implementar una técnica de escalamiento, como StandardScaler",
         "Se implementó sklearn.preprocessing.StandardScaler(), transformando las 5 variables continuas a media 0 y varianza 1."
     )
