@@ -1,62 +1,54 @@
 """
 Script para generar la Guía de Respuestas Detalladas de la Rúbrica en formato formal limpio:
 docs/Respuestas_Rubrica_Detallada_Proyecto.pdf
-Sin cuadros azules ni saturación visual. Formato académico sobrio.
+SIN encabezados, SIN pies de página ni números de página, SIN solapamientos de texto.
 """
 
 import os
 from fpdf import FPDF
 from fpdf.enums import XPos, YPos
 
-class SimpleRubricPDF(FPDF):
+class CleanRubricPDF(FPDF):
     def __init__(self):
         super().__init__(orientation="P", unit="mm", format="A4")
-        self.set_auto_page_break(auto=True, margin=18)
+        self.set_auto_page_break(auto=True, margin=15)
         self.set_margins(left=20, top=18, right=20)
 
+    # SIN ENCABEZADO
     def header(self):
-        if self.page_no() > 1:
-            self.set_font("Helvetica", "", 8)
-            self.set_text_color(107, 114, 128)
-            self.cell(0, 6, "Respuestas a la Rúbrica de Evaluación | Extracción de Conocimiento en Bases de Datos", border="B", align="L", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-            self.ln(3)
+        pass
 
+    # SIN PIE DE PÁGINA NI NÚMERO DE PÁGINA
     def footer(self):
-        self.set_y(-14)
-        self.set_font("Helvetica", "", 8)
-        self.set_text_color(156, 163, 175)
-        self.cell(0, 8, f"Página {self.page_no()} de {{nb}}", align="C")
+        pass
 
     def part_title(self, num_str, title_str):
-        self.ln(4)
+        self.ln(5)
         self.set_font("Helvetica", "B", 11)
         self.set_text_color(17, 24, 39)
         self.cell(0, 6, f"PARTE {num_str}. {title_str.upper()}", align="L", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
         self.set_draw_color(209, 213, 219)
         self.set_line_width(0.4)
         self.line(20, self.get_y(), 190, self.get_y())
-        self.ln(3)
+        self.ln(4)
 
     def item_block(self, item_title, content_text):
-        self.set_font("Helvetica", "B", 8.8)
-        self.set_text_color(31, 41, 55)
-        self.cell(4, 4.5, "-", new_x=XPos.RIGHT, new_y=YPos.TOP)
-        self.cell(0, 4.5, f" {item_title}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-        
-        self.set_font("Helvetica", "", 8.5)
+        self.set_font("Helvetica", "B", 9)
+        self.set_text_color(17, 24, 39)
+        self.write(5, f"- {item_title}\n")
+        self.set_font("Helvetica", "", 8.6)
         self.set_text_color(55, 65, 81)
-        self.multi_cell(0, 4.2, f"  Respuesta: {content_text}")
-        self.ln(2.2)
+        self.write(4.5, f"  Respuesta: {content_text}\n\n")
 
 def build_clean_rubric_pdf():
-    pdf = SimpleRubricPDF()
+    pdf = CleanRubricPDF()
     pdf.alias_nb_pages()
 
     # =========================================================================
-    # PORTADA
+    # PORTADA (Sin encabezados ni pies)
     # =========================================================================
     pdf.add_page()
-    pdf.ln(25)
+    pdf.ln(30)
 
     pdf.set_font("Helvetica", "B", 16)
     pdf.set_text_color(17, 24, 39)
@@ -91,7 +83,7 @@ def build_clean_rubric_pdf():
         pdf.set_font("Helvetica", "", 10)
         pdf.set_text_color(55, 65, 81)
         pdf.cell(0, 7, valor, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-        pdf.ln(1.5)
+        pdf.ln(2)
 
     # =========================================================================
     # PARTE 1
@@ -110,7 +102,11 @@ def build_clean_rubric_pdf():
     pdf.item_block(
         "Establecer un objetivo general y al menos tres objetivos específicos",
         "Objetivo General: Desarrollar e implementar un modelo de segmentación no supervisada con K-Means sobre un catálogo de 920 videojuegos, identificando perfiles arquetípicos de ventas físicas y digitales para optimizar inventarios y la estrategia comercial.\n"
-        "Objetivos Específicos: 1) Auditar, limpiar y normalizar con StandardScaler el dataset corrigiendo duplicados, valores negativos y nulos por mediana; 2) Evaluar K de 2 a 8 justificando K=4 con el Método del Codo y Silueta; 3) Aplicar PCA (2D) para visualizar e interpretar centroides; 4) Desarrollar un dashboard interactivo en Streamlit con KPIs y filtros funcionales."
+        "Objetivos Específicos:\n"
+        "1. Auditar, limpiar y normalizar con StandardScaler el dataset corrigiendo duplicados, valores negativos y nulos por mediana contextual.\n"
+        "2. Evaluar K de 2 a 8 justificando K=4 con el Método del Codo y Silueta.\n"
+        "3. Aplicar PCA (2D) para visualizar e interpretar centroides y varianza explicada.\n"
+        "4. Desarrollar un dashboard interactivo en Streamlit con KPIs y filtros funcionales."
     )
     pdf.item_block(
         "Justificar la importancia del proyecto",
@@ -297,7 +293,7 @@ def build_clean_rubric_pdf():
     output_path = "docs/Respuestas_Rubrica_Detallada_Proyecto.pdf"
     os.makedirs("docs", exist_ok=True)
     pdf.output(output_path)
-    print(f"Guía de respuestas limpia generada: {output_path}")
+    print(f"Guía de respuestas limpia sin encabezados ni pies generada: {output_path}")
 
 if __name__ == "__main__":
     build_clean_rubric_pdf()

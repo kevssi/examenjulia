@@ -1,74 +1,67 @@
 """
 Script para generar el Documento Oficial del Proyecto en formato académico limpio y sobrio:
 docs/Documentacion_Oficial_Proyecto_KMeans_Videojuegos.pdf
-Sin cuadros azules ni saturación visual. Formato formal y legible.
+SIN encabezados, SIN números de página ni pies, SIN leyendas de figura ('Figura X...'), SIN solapamientos de texto.
 """
 
 import os
 from fpdf import FPDF
 from fpdf.enums import XPos, YPos
 
-class SimpleAcademicPDF(FPDF):
+class CleanDocumentPDF(FPDF):
     def __init__(self):
         super().__init__(orientation="P", unit="mm", format="A4")
-        self.set_auto_page_break(auto=True, margin=18)
+        self.set_auto_page_break(auto=True, margin=15)
         self.set_margins(left=20, top=18, right=20)
 
+    # 1. SIN ENCABEZADO
     def header(self):
-        if self.page_no() > 1:
-            self.set_font("Helvetica", "", 8)
-            self.set_text_color(107, 114, 128) # Gris neutro
-            self.cell(0, 6, "Extracción de Conocimiento en Bases de Datos | Proyecto Integrador K-Means", border="B", align="L", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-            self.ln(3)
+        pass
 
+    # 2. SIN PIE DE PÁGINA NI NÚMERO DE PÁGINA
     def footer(self):
-        self.set_y(-14)
-        self.set_font("Helvetica", "", 8)
-        self.set_text_color(156, 163, 175)
-        self.cell(0, 8, f"Página {self.page_no()} de {{nb}}", align="C")
+        pass
 
     def section_title(self, num_str, title_str):
-        self.ln(4)
+        self.ln(5)
         self.set_font("Helvetica", "B", 11)
-        self.set_text_color(17, 24, 39) # Negro / Gris oscuro
+        self.set_text_color(17, 24, 39) # Negro
         self.cell(0, 6, f"{num_str}. {title_str}", align="L", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-        # Línea divisoria muy sutil
         self.set_draw_color(229, 231, 235)
         self.set_line_width(0.3)
         self.line(20, self.get_y(), 190, self.get_y())
-        self.ln(3)
+        self.ln(4)
 
     def paragraph(self, text, bold_prefix=""):
         self.set_font("Helvetica", "", 9)
-        self.set_text_color(55, 65, 81) # Gris texto formal
+        self.set_text_color(55, 65, 81)
         if bold_prefix:
             self.set_font("Helvetica", "B", 9)
             self.set_text_color(17, 24, 39)
-            self.write(4.5, bold_prefix + " ")
+            self.write(4.8, bold_prefix + " ")
             self.set_font("Helvetica", "", 9)
             self.set_text_color(55, 65, 81)
-        self.write(4.5, text + "\n\n")
+        self.write(4.8, text + "\n\n")
 
     def bullet(self, title, desc):
-        self.set_font("Helvetica", "B", 8.8)
-        self.set_text_color(31, 41, 55)
-        self.cell(4, 4.5, "-", new_x=XPos.RIGHT, new_y=YPos.TOP)
-        self.cell(46, 4.5, f"{title}: ", new_x=XPos.RIGHT, new_y=YPos.TOP)
-        self.set_font("Helvetica", "", 8.8)
+        # Flujo continuo natural para evitar CUALQUIER solapamiento horizontal
+        self.set_font("Helvetica", "B", 9)
+        self.set_text_color(17, 24, 39)
+        self.write(4.8, f"- {title}: ")
+        self.set_font("Helvetica", "", 9)
         self.set_text_color(55, 65, 81)
-        self.multi_cell(0, 4.5, desc)
-        self.ln(1)
+        self.write(4.8, desc + "\n\n")
 
 
 def build_clean_documentation_pdf():
-    pdf = SimpleAcademicPDF()
+    pdf = CleanDocumentPDF()
     pdf.alias_nb_pages()
 
     # =========================================================================
-    # 1. PORTADA LIMPIA Y FORMAL
+    # 1. PORTADA LIMPIA Y FORMAL (Sin encabezado ni pie)
     # =========================================================================
     pdf.add_page()
-    pdf.ln(25)
+    pdf.ln(30)
 
     # Título principal
     pdf.set_font("Helvetica", "B", 16)
@@ -87,9 +80,6 @@ def build_clean_documentation_pdf():
     pdf.ln(45)
 
     # Datos solicitados exactamente por el alumno
-    pdf.set_font("Helvetica", "B", 10.5)
-    pdf.set_text_color(17, 24, 39)
-
     campos = [
         ("Materia", "Extracción de Conocimiento en Bases de Datos"),
         ("Alumno", "Kevin Uriel Silva Talamantes"),
@@ -106,7 +96,7 @@ def build_clean_documentation_pdf():
         pdf.set_font("Helvetica", "", 10)
         pdf.set_text_color(55, 65, 81)
         pdf.cell(0, 7, valor, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-        pdf.ln(1.5)
+        pdf.ln(2)
 
     # =========================================================================
     # 2. INTRODUCCIÓN Y PLANTEAMIENTO DEL PROBLEMA
@@ -201,16 +191,13 @@ def build_clean_documentation_pdf():
         pdf.cell(cols[2], 5.2, v_rng, 1, 0, "C")
         pdf.cell(cols[3], 5.2, f" {v_desc}", 1, 1, "L")
 
-    pdf.ln(3)
+    pdf.ln(5)
 
-    # Gráfica centrada de correlación
+    # Gráfica centrada de correlación (SIN TEXTO DE LEYENDA 'Figura 1...')
     img_hm = "assets/reporte_videojuegos/1_heatmap_correlacion.png"
     if os.path.exists(img_hm):
         pdf.image(img_hm, x=55, y=pdf.get_y(), w=100)
-        pdf.ln(80)
-        pdf.set_font("Helvetica", "I", 7.8)
-        pdf.set_text_color(107, 114, 128)
-        pdf.cell(0, 4, "Figura 1. Matriz de correlación lineal de Pearson entre las variables analizadas.", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+        pdf.ln(82)
 
     # =========================================================================
     # 5. DESARROLLO DEL PROYECTO
@@ -227,14 +214,11 @@ def build_clean_documentation_pdf():
     pdf.bullet("3. Imputación Contextual de Nulos", "Se trataron 17 valores nulos (5 en ventas digitales, 6 en precio y 6 en calificación). Se aplicó imputación por mediana condicional según el género de cada juego, evitando la distorsión que ocasionaría la media aritmética global ante títulos extremos.")
     pdf.bullet("4. Estandarización con StandardScaler", "Debido a que las ventas están medidas en millones (0 a 15), el precio en decenas de dólares ($20 a $80) y la calificación en escala de 0 a 100, se aplicó StandardScaler para normalizar las 5 variables a media 0 y varianza 1. Sin esta transformación, la calificación y el precio habrían dominado el 90% del cálculo de distancias euclidianas.")
 
-    # Gráfica del codo y silueta
+    # Gráfica del codo y silueta (SIN TEXTO 'Figura 2...')
     img_k = "assets/reporte_videojuegos/2_codo_silueta.png"
     if os.path.exists(img_k):
         pdf.image(img_k, x=25, y=pdf.get_y(), w=160)
-        pdf.ln(68)
-        pdf.set_font("Helvetica", "I", 7.8)
-        pdf.set_text_color(107, 114, 128)
-        pdf.cell(0, 4, "Figura 2. Evaluación de K mediante Método del Codo (Inercia / SSE) y Coeficiente de Silueta.", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+        pdf.ln(70)
 
     pdf.paragraph(
         "Se evaluaron 7 valores de K (desde K=2 hasta K=8). Se seleccionó K=4 como la configuración óptima. "
@@ -280,19 +264,16 @@ def build_clean_documentation_pdf():
         pdf.cell(cols_c[4], 5.5, c_ca, 1, 0, "C")
         pdf.cell(cols_c[5], 5.5, f" {c_v}", 1, 1, "C")
 
-    pdf.ln(3)
+    pdf.ln(4)
 
-    # Gráficas de soporte en paralelo
+    # Gráficas de soporte en paralelo (SIN TEXTO 'Figura 3...')
     img_pca = "assets/reporte_videojuegos/3_pca_clusters.png"
     img_box = "assets/reporte_videojuegos/4_boxplot_ventas.png"
     y_g = pdf.get_y()
     if os.path.exists(img_pca) and os.path.exists(img_box):
         pdf.image(img_pca, x=20, y=y_g, w=82)
         pdf.image(img_box, x=108, y=y_g, w=82)
-        pdf.ln(56)
-        pdf.set_font("Helvetica", "I", 7.8)
-        pdf.set_text_color(107, 114, 128)
-        pdf.cell(0, 4, "Figura 3. Proyección en PCA 2D (Izquierda) y Diagrama de Cajas de Ventas Totales por Clúster (Derecha).", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+        pdf.ln(58)
 
     pdf.paragraph(
         "La reducción con PCA en 2 dimensiones retiene el 75.2% de la varianza total de la información (49.9% en PC1 y 25.4% en PC2). "
@@ -316,14 +297,11 @@ def build_clean_documentation_pdf():
     pdf.bullet("Página 2: Segmentación K-Means", "Exhibe la distribución porcentual en gráfico de dona (18.4% Blockbusters, 34.5% Éxitos Digitales, 22.8% Coleccionables y 24.3% Fracasos), proyección en PCA 2D, boxplot de ventas totales por clúster, relación de ventas vs. calificación y tabla de auditoría con buscador.")
     pdf.bullet("Barra Lateral de Filtros", "Permite alternar entre ambas páginas y filtrar simultáneamente por Clúster, Género, Plataforma, Slider de Precio (USD) y Slider de Calificación de la crítica.")
 
-    # Imagen de dona
+    # Imagen de dona (SIN TEXTO 'Figura 4...')
     img_dona = "assets/reporte_videojuegos/5_dona_proporcion.png"
     if os.path.exists(img_dona):
         pdf.image(img_dona, x=65, y=pdf.get_y(), w=80)
-        pdf.ln(68)
-        pdf.set_font("Helvetica", "I", 7.8)
-        pdf.set_text_color(107, 114, 128)
-        pdf.cell(0, 4, "Figura 4. Proporción porcentual del catálogo analizado por clúster.", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+        pdf.ln(70)
 
     # =========================================================================
     # 8. CONCLUSIONES Y RECOMENDACIONES
@@ -350,7 +328,7 @@ def build_clean_documentation_pdf():
     output_path = "docs/Documentacion_Oficial_Proyecto_KMeans_Videojuegos.pdf"
     os.makedirs("docs", exist_ok=True)
     pdf.output(output_path)
-    print(f"Documento oficial limpio generado: {output_path}")
+    print(f"Documento oficial limpio sin encabezados, sin pies y sin leyendas generado: {output_path}")
 
 if __name__ == "__main__":
     build_clean_documentation_pdf()
