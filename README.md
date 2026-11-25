@@ -55,9 +55,7 @@ examenjulia/
 │   └── videojuegos_ventas_procesado.csv              # Dataset procesado limpio con 920 filas y clústeres (Partes 3 y 4)
 │
 ├── docs/                                              # Documentación en PDF para entrega
-│   ├── Documentacion_Oficial_Proyecto_KMeans_Videojuegos.pdf  # Documentación formal completa (8 apartados)
-│   ├── Practica_Examen.pdf                           # Respuestas escritas y tablas de Partes 2 a 5
-│   └── Respuestas_Rubrica_Detallada_Proyecto.pdf      # Desglose punto por punto de la rúbrica
+│   └── Documentacion_Oficial_Proyecto_KMeans_Videojuegos.pdf  # Documentación formal completa (8 apartados)
 │
 ├── notebooks/                                         # Código interactivo Jupyter
 │   └── proyecto_kmeans_videojuegos.ipynb             # Notebook con todas las celdas ejecutadas
