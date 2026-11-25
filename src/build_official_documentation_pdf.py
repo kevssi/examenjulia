@@ -1,348 +1,356 @@
 """
-Script para generar el Documento Oficial de Documentación del Proyecto (Parte 7 de la Rúbrica):
+Script para generar el Documento Oficial del Proyecto en formato académico limpio y sobrio:
 docs/Documentacion_Oficial_Proyecto_KMeans_Videojuegos.pdf
-Contiene ÚNICAMENTE los 8 apartados solicitados, con tablas, métricas y gráficas integradas.
+Sin cuadros azules ni saturación visual. Formato formal y legible.
 """
 
 import os
 from fpdf import FPDF
 from fpdf.enums import XPos, YPos
 
-class OfficialDocPDF(FPDF):
+class SimpleAcademicPDF(FPDF):
     def __init__(self):
         super().__init__(orientation="P", unit="mm", format="A4")
-        self.set_auto_page_break(auto=True, margin=15)
-        self.set_margins(left=18, top=16, right=18)
+        self.set_auto_page_break(auto=True, margin=18)
+        self.set_margins(left=20, top=18, right=20)
 
     def header(self):
         if self.page_no() > 1:
-            self.set_font("Helvetica", "B", 8)
-            self.set_text_color(100, 116, 139)
-            self.cell(0, 6, "DOCUMENTACION OFICIAL | SEGMENTACION DE VENTAS DE VIDEOJUEGOS CON K-MEANS", border="B", align="L", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+            self.set_font("Helvetica", "", 8)
+            self.set_text_color(107, 114, 128) # Gris neutro
+            self.cell(0, 6, "Extracción de Conocimiento en Bases de Datos | Proyecto Integrador K-Means", border="B", align="L", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
             self.ln(3)
 
     def footer(self):
-        self.set_y(-12)
-        self.set_font("Helvetica", "I", 8)
-        self.set_text_color(148, 163, 184)
-        self.cell(0, 8, f"Pagina {self.page_no()} de {{nb}} | Proyecto Integrador Mineria de Datos", align="C")
+        self.set_y(-14)
+        self.set_font("Helvetica", "", 8)
+        self.set_text_color(156, 163, 175)
+        self.cell(0, 8, f"Página {self.page_no()} de {{nb}}", align="C")
 
-    def section_header(self, num_str, title_str):
+    def section_title(self, num_str, title_str):
+        self.ln(4)
+        self.set_font("Helvetica", "B", 11)
+        self.set_text_color(17, 24, 39) # Negro / Gris oscuro
+        self.cell(0, 6, f"{num_str}. {title_str}", align="L", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+        # Línea divisoria muy sutil
+        self.set_draw_color(229, 231, 235)
+        self.set_line_width(0.3)
+        self.line(20, self.get_y(), 190, self.get_y())
         self.ln(3)
-        self.set_fill_color(241, 245, 249) # Slate 100
-        self.set_draw_color(203, 213, 225) # Slate 300
-        self.set_font("Helvetica", "B", 10.5)
-        self.set_text_color(15, 23, 42)
-        self.cell(0, 7.5, f"  {num_str}. {title_str}", fill=True, border="L", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-        self.ln(2)
 
     def paragraph(self, text, bold_prefix=""):
-        self.set_font("Helvetica", "", 8.6)
-        self.set_text_color(51, 65, 85)
+        self.set_font("Helvetica", "", 9)
+        self.set_text_color(55, 65, 81) # Gris texto formal
         if bold_prefix:
-            self.set_font("Helvetica", "B", 8.6)
-            self.write(4.2, bold_prefix + " ")
-            self.set_font("Helvetica", "", 8.6)
-        self.write(4.2, text + "\n\n")
+            self.set_font("Helvetica", "B", 9)
+            self.set_text_color(17, 24, 39)
+            self.write(4.5, bold_prefix + " ")
+            self.set_font("Helvetica", "", 9)
+            self.set_text_color(55, 65, 81)
+        self.write(4.5, text + "\n\n")
 
     def bullet(self, title, desc):
-        self.set_font("Helvetica", "B", 8.4)
-        self.set_text_color(30, 41, 59)
-        self.cell(4, 4.2, "-", new_x=XPos.RIGHT, new_y=YPos.TOP)
-        self.cell(46, 4.2, f"{title}: ", new_x=XPos.RIGHT, new_y=YPos.TOP)
-        self.set_font("Helvetica", "", 8.4)
-        self.set_text_color(51, 65, 85)
-        self.multi_cell(0, 4.2, desc)
+        self.set_font("Helvetica", "B", 8.8)
+        self.set_text_color(31, 41, 55)
+        self.cell(4, 4.5, "-", new_x=XPos.RIGHT, new_y=YPos.TOP)
+        self.cell(46, 4.5, f"{title}: ", new_x=XPos.RIGHT, new_y=YPos.TOP)
+        self.set_font("Helvetica", "", 8.8)
+        self.set_text_color(55, 65, 81)
+        self.multi_cell(0, 4.5, desc)
         self.ln(1)
 
 
-def build_documentation_pdf():
-    pdf = OfficialDocPDF()
+def build_clean_documentation_pdf():
+    pdf = SimpleAcademicPDF()
     pdf.alias_nb_pages()
 
     # =========================================================================
-    # 1. PORTADA
+    # 1. PORTADA LIMPIA Y FORMAL
     # =========================================================================
     pdf.add_page()
-    pdf.ln(15)
-
-    # Banner superior
-    pdf.set_fill_color(15, 23, 42) # Slate 900
-    pdf.rect(18, 30, 174, 30, "F")
-    pdf.set_fill_color(37, 99, 235) # Blue 600 line
-    pdf.rect(18, 58.5, 174, 1.5, "F")
-
-    pdf.set_xy(18, 35)
-    pdf.set_font("Helvetica", "B", 14)
-    pdf.set_text_color(248, 250, 252)
-    pdf.cell(174, 7, "PROYECTO INTEGRADOR DE MINERIA DE DATOS", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-    pdf.set_font("Helvetica", "", 9.5)
-    pdf.set_text_color(148, 163, 184)
-    pdf.cell(174, 6, "Segmentacion no supervisada mediante K-Means y Auditoria Multivariada", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-
     pdf.ln(25)
-    pdf.set_fill_color(248, 250, 252)
-    pdf.set_draw_color(226, 232, 240)
-    pdf.rect(25, 75, 160, 140, "DF")
 
-    pdf.set_xy(30, 85)
-    pdf.set_font("Helvetica", "B", 12)
-    pdf.set_text_color(15, 23, 42)
-    pdf.cell(150, 6, "DATOS GENERALES DE ENTREGA", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+    # Título principal
+    pdf.set_font("Helvetica", "B", 16)
+    pdf.set_text_color(17, 24, 39)
+    pdf.cell(0, 8, "PROYECTO INTEGRADOR", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+    pdf.set_font("Helvetica", "B", 13)
+    pdf.set_text_color(31, 41, 55)
+    pdf.cell(0, 7, "Segmentación de Rendimiento de Videojuegos Físicos vs. Digitales", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+    pdf.cell(0, 6, "mediante Algoritmo No Supervisado K-Means", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+
     pdf.ln(8)
+    pdf.set_draw_color(209, 213, 219)
+    pdf.set_line_width(0.5)
+    pdf.line(50, pdf.get_y(), 160, pdf.get_y())
 
-    datos = [
-        ("Nombre del Proyecto", "Gaming Sales Intelligence: Segmentacion de Ventas de Videojuegos Fisicos vs. Digitales mediante K-Means"),
-        ("Asignatura", "Mineria de Datos / Aprendizaje Automatico No Supervisado"),
-        ("Modelo Implementado", "Algoritmo de Clustering Particional K-Means (K=4) con Inicializacion k-means++ y Reduccion Dimensional PCA (2D)"),
-        ("Integrantes", "Equipo de Desarrollo e Investigacion Analitica"),
-        ("Grupo", "Grupo Academico de Ingenieria / Ciencia de Datos"),
-        ("Fecha de Entrega", "Noviembre de 2026"),
-        ("Repositorio Oficial", "GitHub (Codigo fuente en Python, Notebook Jupyter, Datasets y Dashboard Streamlit)")
+    pdf.ln(45)
+
+    # Datos solicitados exactamente por el alumno
+    pdf.set_font("Helvetica", "B", 10.5)
+    pdf.set_text_color(17, 24, 39)
+
+    campos = [
+        ("Materia", "Extracción de Conocimiento en Bases de Datos"),
+        ("Alumno", "Kevin Uriel Silva Talamantes"),
+        ("Maestra", "Julia García"),
+        ("Grupo", "TI3-9"),
+        ("Fecha", "Noviembre de 2026")
     ]
 
-    for k, v in datos:
-        pdf.set_x(32)
-        pdf.set_font("Helvetica", "B", 8.6)
-        pdf.set_text_color(30, 41, 59)
-        pdf.cell(48, 5.5, f"{k}:", new_x=XPos.RIGHT, new_y=YPos.TOP)
-        pdf.set_font("Helvetica", "", 8.5)
-        pdf.set_text_color(51, 65, 85)
-        pdf.multi_cell(100, 5.5, v)
-        pdf.ln(2)
+    for etiqueta, valor in campos:
+        pdf.set_x(45)
+        pdf.set_font("Helvetica", "B", 10)
+        pdf.set_text_color(31, 41, 55)
+        pdf.cell(30, 7, f"{etiqueta}:", new_x=XPos.RIGHT, new_y=YPos.TOP)
+        pdf.set_font("Helvetica", "", 10)
+        pdf.set_text_color(55, 65, 81)
+        pdf.cell(0, 7, valor, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+        pdf.ln(1.5)
 
     # =========================================================================
     # 2. INTRODUCCIÓN Y PLANTEAMIENTO DEL PROBLEMA
     # =========================================================================
     pdf.add_page()
-    pdf.section_header("2", "INTRODUCCION Y PLANTEAMIENTO DEL PROBLEMA")
+    pdf.section_title("2", "Introducción y Planteamiento del Problema")
+    
     pdf.paragraph(
-        "La industria del entretenimiento interactivo ha atravesado una disrupcion estructural con el auge del comercio digital. "
-        "Antiguamente, el 100% de los ingresos dependia de la manufactura y logistica de cartuchos y discos compactos distribuidos en tiendas minoristas. "
-        "En la actualidad, coexisten dos canales marcadamente asimetricos: la distribucion fisica en disco y las descargas digitales a traves de tiendas "
-        "como PlayStation Network, Xbox Live, Nintendo eShop y Steam.",
+        "En la última década, la industria global de los videojuegos ha experimentado una transformación estructural definitiva: "
+        "la migración paulatina del formato físico tradicional (discos y cartuchos comercializados en tiendas físicas) hacia los canales "
+        "de descarga directa y servicios digitales (PlayStation Store, Xbox Network, Nintendo eShop y Steam). "
+        "En la actualidad, ambos canales coexisten bajo patrones de consumo sumamente diferenciados.",
         bold_prefix="Contexto de la Industria:"
     )
+    
     pdf.paragraph(
-        "\"La problematica central que enfrenta una distribuidora o cadena de tiendas es el riesgo de perdida economica e inventario estancado en almacenes, "
-        "debido a la incertidumbre sobre que titulos tienen alta demanda comercial, cuales son fracasos y en que canal (fisico o digital) se desempena mejor cada uno.\" "
-        "Fabricar miles de cajas y discos plasticos para un videojuego que nadie compra en tienda fisica genera perdidas millonarias por inventario muerto. "
-        "Por otro lado, existen generos como los shooters online o los titulos independientes que venden millones exclusivamente por descarga digital; "
-        "imprimirles copias fisicas representa un gasto totalmente prescindible.",
-        bold_prefix="Definicion de la Problematica:"
+        "La problemática central que enfrentan las tiendas minoristas y distribuidoras radica en el riesgo de pérdidas económicas e "
+        "inventario estancado en almacenes, provocado por la incertidumbre sobre qué títulos tienen alta demanda comercial, cuáles "
+        "terminarán siendo fracasos y en qué formato específico (físico o digital) se desempeña mejor cada título. "
+        "Mandar a fabricar decenas de miles de discos y empaques plásticos para un videojuego que nadie compra en tienda física genera "
+        "costos de manufactura y bodegaje irrecuperables. Por otro lado, existen géneros (como shooters multijugador e indies) que venden "
+        "millones exclusivamente por descarga digital; producir cajas físicas para ellos es un desperdicio financiero innecesario.",
+        bold_prefix="Planteamiento de la Problemática:"
     )
+
     pdf.paragraph(
-        "Con mas de 900 videojuegos lanzados anualmente, resulta imposible para un equipo comercial clasificar de forma manual y objetiva que titulos seran exitosos. "
-        "El presente proyecto aplica tecnicas de Mineria de Datos y Clustering No Supervisado (K-Means) para descubrir de forma autonoma patrones latentes de rendimiento, "
-        "optimizando la toma de decisiones de inventario, tirajes de produccion y estrategias de marketing segmentado.",
-        bold_prefix="Justificacion del Proyecto:"
+        "Con un volumen de lanzamientos cercano a los mil títulos anuales, resulta inviable clasificar manualmente el catálogo sin incurrir en sesgos. "
+        "Por ello, este proyecto implementa Minería de Datos y Aprendizaje Automático No Supervisado con el algoritmo K-Means, permitiendo descubrir "
+        "de manera autónoma los patrones naturales de rendimiento y clasificar los productos en perfiles comerciales concretos para la toma de decisiones.",
+        bold_prefix="Justificación del Proyecto:"
     )
 
     # =========================================================================
     # 3. OBJETIVOS
     # =========================================================================
-    pdf.section_header("3", "OBJETIVOS DEL PROYECTO")
+    pdf.section_title("3", "Objetivos del Proyecto")
+    
     pdf.paragraph(
-        "Desarrollar e implementar un modelo de segmentacion multivariada no supervisada utilizando el algoritmo K-Means sobre un catalogo "
-        "de 920 videojuegos, identificando perfiles arquetipicos de ventas fisicas y digitales para optimizar la gestion de inventario y la estrategia comercial.",
+        "Desarrollar e implementar un modelo de segmentación multivariada no supervisada utilizando el algoritmo K-Means sobre un catálogo de 920 videojuegos, "
+        "identificando perfiles arquetípicos de ventas físicas y digitales para optimizar la gestión de inventario y la estrategia comercial.",
         bold_prefix="Objetivo General:"
     )
-    pdf.paragraph("Objetivos Especificos:")
-    pdf.bullet("1. Auditoria y Limpieza de Datos", "Identificar y corregir inconsistencias en el dataset (duplicados, valores negativos y nulos mediante imputacion contextual por mediana) y normalizar las variables numericas con StandardScaler.")
-    pdf.bullet("2. Modelado y Evaluacion de K", "Evaluar cuantitativamente al menos 5 configuraciones de K mediante el Metodo del Codo (Inercia / SSE) y el Coeficiente de Silueta para determinar y justificar la estructura de agrupamiento optima.")
-    pdf.bullet("3. Reduccion Dimensional y Analisis", "Implementar Analisis de Componentes Principales (PCA en 2D) para proyectar el espacio multidimensional y caracterizar semantica y comercialmente cada uno de los conglomerados descubiertos.")
-    pdf.bullet("4. Despliegue en Dashboard Interactivo", "Construir una aplicacion web analitica en Streamlit con navegacion multipagina, 4 KPIs en tiempo real, 4 visualizaciones interactivas y filtros multivariados funcionales.")
+    
+    pdf.paragraph("Objetivos Específicos:")
+    pdf.bullet("1. Auditoría y Preparación de Datos", "Limpiar y auditar el dataset resolviendo inconsistencias, registros duplicados, valores negativos y nulos mediante imputación contextual con la mediana por género, y normalizar las variables con StandardScaler.")
+    pdf.bullet("2. Modelado y Evaluación de K", "Evaluar cuantitativamente al menos cinco configuraciones de K mediante el Método del Codo (Inercia / SSE) y el Coeficiente de Silueta, seleccionando y justificando K=4.")
+    pdf.bullet("3. Reducción y Análisis Dimensional", "Aplicar Análisis de Componentes Principales (PCA en 2D) para visualizar e interpretar geométricamente los centroides y la cohesión interna de los clústeres descubiertos.")
+    pdf.bullet("4. Despliegue en Dashboard Interactivo", "Construir una plataforma analítica en Streamlit con indicadores KPI en tiempo real, gráficas analíticas interactivas, dos páginas de navegación y filtros multivariados funcionales.")
 
     # =========================================================================
     # 4. DESCRIPCIÓN DEL DATASET
     # =========================================================================
     pdf.add_page()
-    pdf.section_header("4", "DESCRIPCION DEL DATASET")
+    pdf.section_title("4", "Descripción del Dataset")
+    
     pdf.paragraph(
-        "El dataset fue obtenido a partir de repositorios publicos de datos de la industria del videojuego (VGChartz / Kaggle Game Sales Dataset), "
-        "estructurado con 928 registros y 12 atributos que combinan metadatos cualitativos y metricas cuantitativas de mercado.",
-        bold_prefix="Fuente y Alcance:"
+        "El dataset fue recopilado a partir de fuentes públicas y registros consolidados de la industria (VGChartz / Metacritic / Kaggle Video Game Sales Dataset). "
+        "El archivo original cuenta con 928 filas y 12 columnas, conteniendo tanto atributos descriptivos como métricas cuantitativas de ventas y mercado.",
+        bold_prefix="Origen y Características:"
     )
 
-    # Tabla de variables
-    pdf.set_font("Helvetica", "B", 7.5)
-    pdf.set_fill_color(30, 41, 59)
-    pdf.set_text_color(255, 255, 255)
-    cols = [40, 24, 26, 84]
+    # Tabla limpia de variables
+    pdf.set_font("Helvetica", "B", 8)
+    pdf.set_fill_color(243, 244, 246)
+    pdf.set_text_color(17, 24, 39)
+    pdf.set_draw_color(209, 213, 219)
+    
+    cols = [38, 22, 24, 86]
     pdf.cell(cols[0], 6, "Variable", 1, 0, "C", True)
     pdf.cell(cols[1], 6, "Tipo", 1, 0, "C", True)
-    pdf.cell(cols[2], 6, "Rango / Escala", 1, 0, "C", True)
-    pdf.cell(cols[3], 6, "Descripcion y Relevancia", 1, 1, "C", True)
+    pdf.cell(cols[2], 6, "Escala / Rango", 1, 0, "C", True)
+    pdf.cell(cols[3], 6, "Descripción", 1, 1, "C", True)
 
     vars_info = [
-        ("id_juego", "Categorico", "GAME-0001...", "Identificador unico de cada titulo analizado."),
-        ("titulo", "Categorico", "Texto", "Nombre comercial del videojuego y edicion."),
-        ("genero", "Categorico", "9 categorias", "Accion, Aventura, Deportes, RPG, Shooter, Indie, etc."),
-        ("plataforma", "Categorico", "6 plataformas", "PS5, PS4, Xbox Series, Xbox One, Switch, PC."),
-        ("ventas_fisicas_millones", "Numerico (float)", "0.01 a 15.00 M", "Copias en cartucho/disco vendidas (crucial para inventario)."),
-        ("ventas_digitales_millones", "Numerico (float)", "0.02 a 20.00 M", "Copias descargadas por internet (crucial para canal digital)."),
-        ("ventas_totales_millones", "Numerico (float)", "0.03 a 35.00 M", "Suma acumulada global del desempeno comercial."),
-        ("precio_lanzamiento_usd", "Numerico (float)", "$19.99 a $79.99", "Precio sugerido al consumidor en dolares estadounidenses."),
-        ("calificacion_critica", "Numerico (int)", "30 a 98 pts", "Puntaje otorgado por la critica especializada de Metacritic."),
-        ("horas_juego", "Numerico (int)", "5 a 120 horas", "Duracion promedio estimada de la campana principal.")
+        ("id_juego", "Texto", "GAME-0001...", "Identificador único asignado a cada videojuego."),
+        ("titulo", "Texto", "Nombre comercial", "Título del videojuego y edición de lanzamiento."),
+        ("genero", "Texto", "9 géneros", "Acción, Aventura, Deportes, RPG, Shooter, Indie, etc."),
+        ("plataforma", "Texto", "6 plataformas", "PS5, PS4, Xbox Series, Xbox One, Switch y PC."),
+        ("ventas_fisicas_millones", "Numérico", "0.01 a 15.0 M", "Copias en cartucho/disco físico vendidas a nivel global."),
+        ("ventas_digitales_millones", "Numérico", "0.02 a 20.0 M", "Copias descargadas por canales digitales a nivel global."),
+        ("ventas_totales_millones", "Numérico", "0.03 a 35.0 M", "Suma acumulada del volumen de ventas de ambos canales."),
+        ("precio_lanzamiento_usd", "Numérico", "$19.99 a $79.99", "Precio oficial de venta sugerido al público en USD."),
+        ("calificacion_critica", "Numérico", "30 a 98 puntos", "Puntaje de aceptación otorgado por la prensa especializada."),
+        ("horas_juego", "Numérico", "5 a 120 horas", "Duración media estimada de la campaña principal.")
     ]
 
-    pdf.set_font("Helvetica", "", 7.5)
-    pdf.set_text_color(30, 41, 59)
+    pdf.set_font("Helvetica", "", 7.8)
+    pdf.set_text_color(55, 65, 81)
     for v_nom, v_tipo, v_rng, v_desc in vars_info:
-        pdf.cell(cols[0], 5, f" {v_nom}", 1, 0, "L")
-        pdf.cell(cols[1], 5, v_tipo, 1, 0, "C")
-        pdf.cell(cols[2], 5, v_rng, 1, 0, "C")
-        pdf.cell(cols[3], 5, f" {v_desc}", 1, 1, "L")
+        pdf.cell(cols[0], 5.2, f" {v_nom}", 1, 0, "L")
+        pdf.cell(cols[1], 5.2, v_tipo, 1, 0, "C")
+        pdf.cell(cols[2], 5.2, v_rng, 1, 0, "C")
+        pdf.cell(cols[3], 5.2, f" {v_desc}", 1, 1, "L")
 
-    pdf.ln(2)
-    pdf.paragraph(
-        "Se seleccionaron como variables clave para el clustering: ventas_fisicas_millones, ventas_digitales_millones, precio_lanzamiento_usd, "
-        "calificacion_critica y horas_juego, ya que definen el perfil comercial y cualitativo completo de cada producto.",
-        bold_prefix="Variables Seleccionadas:"
-    )
+    pdf.ln(3)
 
-    # Gráfica exploratoria 1: Heatmap
+    # Gráfica centrada de correlación
     img_hm = "assets/reporte_videojuegos/1_heatmap_correlacion.png"
     if os.path.exists(img_hm):
-        pdf.image(img_hm, x=50, y=pdf.get_y(), w=110)
-        pdf.ln(85)
-        pdf.set_font("Helvetica", "I", 7.5)
-        pdf.cell(0, 4, "Figura 1: Matriz de correlacion lineal de Pearson entre los atributos analizados.", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+        pdf.image(img_hm, x=55, y=pdf.get_y(), w=100)
+        pdf.ln(80)
+        pdf.set_font("Helvetica", "I", 7.8)
+        pdf.set_text_color(107, 114, 128)
+        pdf.cell(0, 4, "Figura 1. Matriz de correlación lineal de Pearson entre las variables analizadas.", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
 
     # =========================================================================
-    # 5. DESARROLLO DEL PROYECTO: LIMPIEZA, PREPARACIÓN Y K-MEANS
+    # 5. DESARROLLO DEL PROYECTO
     # =========================================================================
     pdf.add_page()
-    pdf.section_header("5", "DESARROLLO DEL PROYECTO: LIMPIEZA, PREPARACION Y K-MEANS")
+    pdf.section_title("5", "Desarrollo del Proyecto: Limpieza, Preparación y K-Means")
+
     pdf.paragraph(
-        "La etapa de preparacion de datos se desarrollo bajo un estricto protocolo de auditoria:",
-        bold_prefix="Tratamiento de Inconsistencias:"
+        "El preprocesamiento de datos se desarrolló bajo tres etapas indispensables para asegurar la calidad de los agrupamientos:",
+        bold_prefix="Auditoría y Limpieza:"
     )
-    pdf.bullet("Eliminacion de Duplicados", "Se detectaron y eliminaron 8 filas duplicadas exactas generadas durante la consolidacion, asegurando 920 registros limpios e independientes.")
-    pdf.bullet("Correccion de Signos Negativos", "Se identificaron valores negativos en precio y ventas fisicas derivados de errores de digitacion, corrigiendose con la transformacion de valor absoluto abs().")
-    pdf.bullet("Imputacion Contextual por Mediana", "Para los valores nulos (5 en ventas digitales, 6 en precio y 6 en calificacion), se aplico imputacion contextual con la mediana del genero correspondiente, preservando la distribucion sin sesgos de la media aritmetica.")
-    pdf.bullet("Escalamiento Estandarizado (StandardScaler)", "Debido a que las ventas estan en millones (0 a 15), el precio en decenas ($20 a $80) y la calificacion en escala 0-100, se normalizaron las 5 variables a media 0 y varianza 1 (Z-Score), impidiendo que las variables de mayor escala dominen artificialmente el calculo de distancias euclidianas.")
+    pdf.bullet("1. Eliminación de Duplicados", "Se identificaron 8 filas duplicadas exactas generadas durante la consolidación de fuentes, procediendo a su eliminación para no distorsionar las densidades de puntos (dejando 920 registros limpios).")
+    pdf.bullet("2. Corrección de Valores Negativos", "Se corrigieron valores anómalos negativos en precio y ventas físicas originados por errores de digitación, aplicando la función de valor absoluto np.abs().")
+    pdf.bullet("3. Imputación Contextual de Nulos", "Se trataron 17 valores nulos (5 en ventas digitales, 6 en precio y 6 en calificación). Se aplicó imputación por mediana condicional según el género de cada juego, evitando la distorsión que ocasionaría la media aritmética global ante títulos extremos.")
+    pdf.bullet("4. Estandarización con StandardScaler", "Debido a que las ventas están medidas en millones (0 a 15), el precio en decenas de dólares ($20 a $80) y la calificación en escala de 0 a 100, se aplicó StandardScaler para normalizar las 5 variables a media 0 y varianza 1. Sin esta transformación, la calificación y el precio habrían dominado el 90% del cálculo de distancias euclidianas.")
 
     # Gráfica del codo y silueta
     img_k = "assets/reporte_videojuegos/2_codo_silueta.png"
     if os.path.exists(img_k):
         pdf.image(img_k, x=25, y=pdf.get_y(), w=160)
         pdf.ln(68)
-        pdf.set_font("Helvetica", "I", 7.5)
-        pdf.cell(0, 4, "Figura 2: Evaluacion de K mediante Metodo del Codo (Inercia) y Coeficiente de Silueta.", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+        pdf.set_font("Helvetica", "I", 7.8)
+        pdf.set_text_color(107, 114, 128)
+        pdf.cell(0, 4, "Figura 2. Evaluación de K mediante Método del Codo (Inercia / SSE) y Coeficiente de Silueta.", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
 
     pdf.paragraph(
-        "Se evaluaron 7 valores de K (2 a 8). K=4 se selecciono como el optimo al marcar el punto de inflexion donde la inercia se estabiliza (1,415.33) "
-        "y el Coeficiente de Silueta alcanza su valor maximo absoluto (0.4197). "
-        "En comparacion con K=3 (Inercia: 1,885.4, Silueta: 0.4141), K=3 fusionaba erroneamente a los exitos digitales con los coleccionables fisicos, "
-        "mientras que K=4 logra aislar con absoluta pureza el comportamiento de ambos canales.",
-        bold_prefix="Justificacion y Comparacion de Modelos (K=4 vs K=3):"
+        "Se evaluaron 7 valores de K (desde K=2 hasta K=8). Se seleccionó K=4 como la configuración óptima. "
+        "En K=4 se ubica el punto de inflexión del codo (Inercia = 1,415.33) y se obtiene el valor máximo de Silueta (0.4197), con Calinski-Harabasz de 687.04 y Davies-Bouldin de 0.9637. "
+        "En comparación con K=3 (Inercia = 1,885.4, Silueta = 0.4141), K=3 fusionaba erróneamente los títulos digitales con los de consola en un único grupo mixto, perdiendo resolución comercial. K=4 separa con total nitidez ambos canales de venta.",
+        bold_prefix="Selección y Justificación de K (K=4 vs K=3):"
     )
 
     # =========================================================================
     # 6. RESULTADOS Y ANÁLISIS
     # =========================================================================
     pdf.add_page()
-    pdf.section_header("6", "RESULTADOS Y ANALISIS MULTIVARIADO")
+    pdf.section_title("6", "Resultados y Análisis")
 
-    # Tabla de Centroides
-    pdf.set_font("Helvetica", "B", 7.5)
-    pdf.set_fill_color(30, 41, 59)
-    pdf.set_text_color(255, 255, 255)
-    cols_c = [48, 22, 22, 22, 20, 40]
-    pdf.cell(cols_c[0], 6, "Cluster", 1, 0, "C", True)
-    pdf.cell(cols_c[1], 6, "Venta Fisica", 1, 0, "C", True)
+    # Tabla de Centroides formal
+    pdf.set_font("Helvetica", "B", 8)
+    pdf.set_fill_color(243, 244, 246)
+    pdf.set_text_color(17, 24, 39)
+    pdf.set_draw_color(209, 213, 219)
+    
+    cols_c = [48, 22, 22, 22, 20, 36]
+    pdf.cell(cols_c[0], 6, "Clúster Asignado", 1, 0, "C", True)
+    pdf.cell(cols_c[1], 6, "Venta Física", 1, 0, "C", True)
     pdf.cell(cols_c[2], 6, "Venta Digital", 1, 0, "C", True)
     pdf.cell(cols_c[3], 6, "Precio Medio", 1, 0, "C", True)
     pdf.cell(cols_c[4], 6, "Calif. Media", 1, 0, "C", True)
-    pdf.cell(cols_c[5], 6, "Volumen y Porcentaje", 1, 1, "C", True)
+    pdf.cell(cols_c[5], 6, "Proporción", 1, 1, "C", True)
 
     centroides = [
-        ("Superventas Globales (Blockbusters)", "8.69 M", "12.00 M", "$69.87 USD", "88.3 pts", "169 juegos (18.4%)"),
-        ("Fracasos Comerciales y Bajo Rendimiento", "0.41 M", "0.50 M", "$54.78 USD", "54.1 pts", "224 juegos (24.3%)"),
-        ("Coleccionables de Consola (Fisico Fuerte)", "6.65 M", "2.50 M", "$59.99 USD", "84.2 pts", "210 juegos (22.8%)"),
-        ("Exitos Digitales e Indies Virales", "0.60 M", "7.80 M", "$34.70 USD", "82.3 pts", "317 juegos (34.5%)")
+        ("Superventas Globales (Blockbusters)", "8.69 M", "12.00 M", "$69.87 USD", "88.3 pts", "169 (18.4%)"),
+        ("Fracasos Comerciales y Bajo Rendimiento", "0.41 M", "0.50 M", "$54.78 USD", "54.1 pts", "224 (24.3%)"),
+        ("Coleccionables de Consola (Físico Fuerte)", "6.65 M", "2.50 M", "$59.99 USD", "84.2 pts", "210 (22.8%)"),
+        ("Éxitos Digitales e Indies Virales", "0.60 M", "7.80 M", "$34.70 USD", "82.3 pts", "317 (34.5%)")
     ]
 
-    pdf.set_font("Helvetica", "", 7.5)
-    pdf.set_text_color(30, 41, 59)
+    pdf.set_font("Helvetica", "", 7.8)
+    pdf.set_text_color(55, 65, 81)
     for c_n, c_f, c_d, c_p, c_ca, c_v in centroides:
         pdf.cell(cols_c[0], 5.5, f" {c_n}", 1, 0, "L")
         pdf.cell(cols_c[1], 5.5, c_f, 1, 0, "C")
         pdf.cell(cols_c[2], 5.5, c_d, 1, 0, "C")
         pdf.cell(cols_c[3], 5.5, c_p, 1, 0, "C")
         pdf.cell(cols_c[4], 5.5, c_ca, 1, 0, "C")
-        pdf.cell(cols_c[5], 5.5, f" {c_v}", 1, 1, "L")
+        pdf.cell(cols_c[5], 5.5, f" {c_v}", 1, 1, "C")
 
     pdf.ln(3)
 
-    # Gráfica PCA y Boxplot en paralelo
+    # Gráficas de soporte en paralelo
     img_pca = "assets/reporte_videojuegos/3_pca_clusters.png"
     img_box = "assets/reporte_videojuegos/4_boxplot_ventas.png"
     y_g = pdf.get_y()
     if os.path.exists(img_pca) and os.path.exists(img_box):
-        pdf.image(img_pca, x=18, y=y_g, w=85)
-        pdf.image(img_box, x=107, y=y_g, w=85)
-        pdf.ln(58)
-        pdf.set_font("Helvetica", "I", 7.5)
-        pdf.cell(0, 4, "Figura 3: Proyeccion PCA 2D (Izquierda) y Dispersion de Ventas Totales por Cluster (Derecha).", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+        pdf.image(img_pca, x=20, y=y_g, w=82)
+        pdf.image(img_box, x=108, y=y_g, w=82)
+        pdf.ln(56)
+        pdf.set_font("Helvetica", "I", 7.8)
+        pdf.set_text_color(107, 114, 128)
+        pdf.cell(0, 4, "Figura 3. Proyección en PCA 2D (Izquierda) y Diagrama de Cajas de Ventas Totales por Clúster (Derecha).", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
 
     pdf.paragraph(
-        "La proyeccion PCA 2D explica el 75.2% de la varianza total acumulada (49.9% en PC1 y 25.4% en PC2). "
-        "Se observa que los Blockbusters se proyectan hacia el extremo derecho de maximo volumen, los Exitos Digitales en la parte superior "
-        "de descarga masiva, los Coleccionables en la parte inferior de traccion fisica, y los Fracasos en el cuadrante inferior izquierdo.",
-        bold_prefix="Interpretacion Geometrica:"
+        "La reducción con PCA en 2 dimensiones retiene el 75.2% de la varianza total de la información (49.9% en PC1 y 25.4% en PC2). "
+        "En la proyección bidimensional se comprueba la nitidez de los grupos: los Blockbusters se proyectan hacia el extremo derecho de máxima recaudación, "
+        "los Éxitos Digitales en la parte superior de alta descarga, los Coleccionables de Consola en la parte inferior de demanda física, "
+        "y los Fracasos Comerciales agrupados de manera compacta en la esquina inferior izquierda.",
+        bold_prefix="Interpretación de los Agrupamientos:"
     )
 
     # =========================================================================
-    # 7. DASHBOARD INTERACTIVO Y CAPTURAS
+    # 7. DASHBOARD
     # =========================================================================
     pdf.add_page()
-    pdf.section_header("7", "DASHBOARD INTERACTIVO (STREAMLIT)")
+    pdf.section_title("7", "Dashboard Interactivo (Streamlit)")
+    
     pdf.paragraph(
-        "Se desarrollo una aplicacion web analitica implementada en Python con Streamlit y visualizaciones interactivas de Plotly. "
-        "Presenta un diseno formal oscuro (Dark Slate 900) con difuminados de glassmorphism, tipografia Plus Jakarta Sans e iconografia Lucide pura sin elementos distractores.",
-        bold_prefix="Arquitectura de la Plataforma:"
+        "Se diseñó una aplicación analítica en Streamlit con diseño formal sobrio, sin elementos distractores e integrando 5 filtros dinámicos con lógica AND:",
+        bold_prefix="Estructura de la Plataforma:"
     )
-    pdf.bullet("Pagina 1: Analisis General de Ventas", "Presenta 4 KPIs agregados (Total juegos, Venta digital media, Venta fisica media, Puntaje critica), dispersion multivariada de canales, barras agrupadas de ventas por genero, barras horizontales por plataforma y matriz de correlacion.")
-    pdf.bullet("Pagina 2: Segmentacion K-Means", "Exhibe la distribucion porcentual en grafico de dona, proyeccion de clusteres en PCA 2D, boxplot de dispersion de ventas, dispersion ventas vs. calificacion y tabla de auditoria interactiva.")
-    pdf.bullet("Barra Lateral y 5 Filtros Interactivos", "Incorpora conmutador de paginas, multiselect de Cluster, multiselect de Genero, multiselect de Plataforma, slider de Precio (USD) y slider de Calificacion Critica, operando bajo logica booleana AND en tiempo real.")
+    pdf.bullet("Página 1: Análisis General", "Presenta cuatro tarjetas KPI en tiempo real (Total juegos, Venta digital media, Venta física media y Puntaje de crítica), gráfica de dispersión de canales, comparativa de ventas físicas vs. digitales por género en barras agrupadas, volumen por plataforma y matriz de correlación.")
+    pdf.bullet("Página 2: Segmentación K-Means", "Exhibe la distribución porcentual en gráfico de dona (18.4% Blockbusters, 34.5% Éxitos Digitales, 22.8% Coleccionables y 24.3% Fracasos), proyección en PCA 2D, boxplot de ventas totales por clúster, relación de ventas vs. calificación y tabla de auditoría con buscador.")
+    pdf.bullet("Barra Lateral de Filtros", "Permite alternar entre ambas páginas y filtrar simultáneamente por Clúster, Género, Plataforma, Slider de Precio (USD) y Slider de Calificación de la crítica.")
 
     # Imagen de dona
     img_dona = "assets/reporte_videojuegos/5_dona_proporcion.png"
     if os.path.exists(img_dona):
         pdf.image(img_dona, x=65, y=pdf.get_y(), w=80)
         pdf.ln(68)
-        pdf.set_font("Helvetica", "I", 7.5)
-        pdf.cell(0, 4, "Figura 4: Distribucion porcentual del catalogo por cluster dentro del dashboard.", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+        pdf.set_font("Helvetica", "I", 7.8)
+        pdf.set_text_color(107, 114, 128)
+        pdf.cell(0, 4, "Figura 4. Proporción porcentual del catálogo analizado por clúster.", align="C", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
 
     # =========================================================================
     # 8. CONCLUSIONES Y RECOMENDACIONES
     # =========================================================================
     pdf.add_page()
-    pdf.section_header("8", "CONCLUSIONES Y RECOMENDACIONES")
-    
-    pdf.paragraph("Principales Hallazgos Relevantes:")
-    pdf.bullet("1. Dominio del Canal Digital en la Variedad", "El 34.5% del catalogo corresponde a Exitos Digitales (317 titulos), donde las descargas superan por mas de 10 a 1 a la venta en disco (7.80 M vs 0.60 M). Producir tirajes fisicos para este grupo es un desperdicio financiero.")
-    pdf.bullet("2. Concentracion de Ingresos en Blockbusters", "Unicamente el 18.4% de los juegos (169 titulos) concentra el 52% de los ingresos globales brutos, vendiendo mas de 20 millones de copias combinadas por titulo.")
-    pdf.bullet("3. Tasa de Falla Comercial Critica", "Casi 1 de cada 4 titulos lanzados (24.3%) es un fracaso comercial con ventas menores a 1 millon y calificaciones promedio mediocres (54 puntos), representando el principal causante de perdidas en almacenes.")
+    pdf.section_title("8", "Conclusiones y Recomendaciones")
 
-    pdf.paragraph("Recomendaciones Estrategicas de Negocio:")
-    pdf.bullet("1. Politica de Cero Discos Fisicos para Indies", "Eliminar por completo los contratos de distribucion fisica para juegos del Cluster 3 (Exitos Digitales), comercializandolos exclusivamente en tiendas digitales para maximizar el margen de utilidad neta.")
-    pdf.bullet("2. Tirajes Selectivos de Coleccion para Consolas", "Focalizar la fabricacion de cajas fisicas de lujo en titulos de aventura y plataformas para Nintendo y PlayStation (Cluster 2), donde el comprador valora el formato fisico.")
-    pdf.bullet("3. Liquidacion Inmediata de Fracasos Detectados", "Establecer descuentos dinamicos y campanas de remate durante las primeras 4 semanas para los titulos clasificados en el Cluster 1, recuperando liquidez antes de la depreciacion total.")
+    pdf.paragraph("Hallazgos Principales:")
+    pdf.bullet("1. Predominancia del Canal Digital", "El 34.5% de los videojuegos (Éxitos Digitales) vende 13 veces más por descarga digital que en formato físico (7.80 M vs. 0.60 M). Producir discos físicos para estos juegos representa una pérdida financiera directa.")
+    pdf.bullet("2. Concentración de Rentabilidad", "Menos del 20% del catálogo (Superventas Blockbusters) genera más de la mitad de los ingresos comerciales brutos globales.")
+    pdf.bullet("3. Tasa de Falla en Tiendas", "El 24.3% de los títulos lanzados es un fracaso comercial con ventas inferiores a 1 millón y calificaciones bajas (54 puntos), siendo el principal causante de inventario muerto.")
+
+    pdf.paragraph("Recomendaciones para la Toma de Decisiones:")
+    pdf.bullet("1. Política Cero Discos Físicos para Indies", "Comercializar los juegos del Clúster de Éxitos Digitales exclusivamente por internet, ahorrando el 100% de los costos de manufactura plástica y fletes.")
+    pdf.bullet("2. Producción Focalizada en Coleccionables", "Concentrar la impresión de cajas y ediciones especiales únicamente en juegos de consola de aventura y plataformas (Clúster de Coleccionables).")
+    pdf.bullet("3. Remates Rápidos para Títulos de Bajo Rendimiento", "Aplicar descuentos agresivos durante las primeras cuatro semanas para los títulos del Clúster de Fracasos, recuperando liquidez antes de que su valor comercial decaiga totalmente.")
 
     pdf.paragraph(
-        "K-Means presupone grupos de forma convexa e hiper-esferica con varianzas similares. Ademas, no contempla la dinamica temporal estacional "
-        "(ofertas de fin de ano o Black Friday). Se recomienda como trabajo futuro incorporar series de tiempo y modelos de densidad como DBSCAN.",
+        "K-Means presupone grupos hiper-esféricos de varianza similar y no contempla variaciones estacionales (ofertas de fin de año o Black Friday). "
+        "Como trabajo futuro, se recomienda integrar modelos temporales y algoritmos basados en densidad como DBSCAN.",
         bold_prefix="Limitaciones del Modelo:"
     )
 
     output_path = "docs/Documentacion_Oficial_Proyecto_KMeans_Videojuegos.pdf"
     os.makedirs("docs", exist_ok=True)
     pdf.output(output_path)
-    print(f"Documentación Oficial en PDF generada exitosamente en: {output_path}")
+    print(f"Documento oficial limpio generado: {output_path}")
 
 if __name__ == "__main__":
-    build_documentation_pdf()
+    build_clean_documentation_pdf()
