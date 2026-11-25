@@ -48,10 +48,16 @@ def build_clean_rubric_pdf():
     pdf.alias_nb_pages()
 
     # =========================================================================
-    # PORTADA (Sin encabezados ni pies)
+    # PORTADA (Con logo institucional UTSLRC)
     # =========================================================================
     pdf.add_page()
-    pdf.ln(30)
+    
+    logo_path = "assets/logo_utslrc.png"
+    if os.path.exists(logo_path):
+        pdf.image(logo_path, x=70, y=20, w=70)
+        pdf.set_y(54)
+    else:
+        pdf.ln(30)
 
     pdf.set_font("Arial", "B", 18)
     pdf.set_text_color(17, 24, 39)

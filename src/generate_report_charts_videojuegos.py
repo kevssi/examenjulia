@@ -14,7 +14,7 @@ from sklearn.decomposition import PCA
 from sklearn.metrics import silhouette_score
 
 def generate_charts():
-    os.makedirs("assets/reporte_videojuegos", exist_ok=True)
+    os.makedirs("assets", exist_ok=True)
     df = pd.read_csv("data/videojuegos_ventas_procesado.csv")
 
     plt.style.use('seaborn-v0_8-whitegrid')
@@ -38,7 +38,7 @@ def generate_charts():
                 xticklabels=nombres_corr, yticklabels=nombres_corr, cbar_kws={'shrink': 0.8}, ax=ax)
     ax.set_title("Matriz de Correlación de Atributos", fontsize=11, fontweight="bold", pad=12)
     plt.tight_layout()
-    plt.savefig("assets/reporte_videojuegos/1_heatmap_correlacion.png")
+    plt.savefig("assets/1_heatmap_correlacion.png")
     plt.close()
 
     # 2. Método del Codo y Silueta
@@ -68,7 +68,7 @@ def generate_charts():
     ax2.set_ylabel("Silhouette Score")
     ax2.legend(loc="upper right", fontsize=8)
     plt.tight_layout()
-    plt.savefig("assets/reporte_videojuegos/2_codo_silueta.png")
+    plt.savefig("assets/2_codo_silueta.png")
     plt.close()
 
     # 3. Proyección PCA 2D
@@ -83,7 +83,7 @@ def generate_charts():
     ax.set_ylabel("Componente Principal 2 (Canal Digital/Físico - 25.4%)", fontsize=9)
     ax.legend(loc="best", fontsize=7.5, frameon=True)
     plt.tight_layout()
-    plt.savefig("assets/reporte_videojuegos/3_pca_clusters.png")
+    plt.savefig("assets/3_pca_clusters.png")
     plt.close()
 
     # 4. Boxplot de Ventas Totales por Clúster
@@ -96,7 +96,7 @@ def generate_charts():
     labels_x = ["Blockbusters", "Fracasos", "Coleccionables", "Éxitos Digitales"]
     ax.set_xticklabels(labels_x, fontsize=8.5, fontweight="bold")
     plt.tight_layout()
-    plt.savefig("assets/reporte_videojuegos/4_boxplot_ventas.png")
+    plt.savefig("assets/4_boxplot_ventas.png")
     plt.close()
 
     # 5. Dona de Proporción
@@ -110,10 +110,10 @@ def generate_charts():
     ax.add_artist(centre_circle)
     ax.set_title("Proporción del Catálogo por Clúster", fontsize=10, fontweight="bold")
     plt.tight_layout()
-    plt.savefig("assets/reporte_videojuegos/5_dona_proporcion.png")
+    plt.savefig("assets/5_dona_proporcion.png")
     plt.close()
 
-    print("Gráficas para reporte generadas exitosamente en assets/reporte_videojuegos/")
+    print("Gráficas para reporte generadas exitosamente en assets/")
 
 if __name__ == "__main__":
     generate_charts()

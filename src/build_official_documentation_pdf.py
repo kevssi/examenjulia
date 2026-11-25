@@ -61,10 +61,17 @@ def build_clean_documentation_pdf():
     pdf.alias_nb_pages()
 
     # =========================================================================
-    # 1. PORTADA LIMPIA Y FORMAL (Sin encabezado ni pie)
+    # 1. PORTADA LIMPIA Y FORMAL (Con logo institucional UTSLRC)
     # =========================================================================
     pdf.add_page()
-    pdf.ln(30)
+    
+    # Logo oficial UTSLRC
+    logo_path = "assets/logo_utslrc.png"
+    if os.path.exists(logo_path):
+        pdf.image(logo_path, x=70, y=20, w=70)
+        pdf.set_y(54)
+    else:
+        pdf.ln(30)
 
     # Título principal
     pdf.set_font("Arial", "B", 18)
@@ -198,7 +205,7 @@ def build_clean_documentation_pdf():
     pdf.ln(5)
 
     # Gráfica centrada de correlación (SIN TEXTO DE LEYENDA 'Figura 1...')
-    img_hm = "assets/reporte_videojuegos/1_heatmap_correlacion.png"
+    img_hm = "assets/1_heatmap_correlacion.png"
     if os.path.exists(img_hm):
         pdf.image(img_hm, x=55, y=pdf.get_y(), w=100)
         pdf.ln(82)
@@ -219,7 +226,7 @@ def build_clean_documentation_pdf():
     pdf.bullet("4. Estandarización con StandardScaler", "Debido a que las ventas están medidas en millones (0 a 15), el precio en decenas de dólares ($20 a $80) y la calificación en escala de 0 a 100, se aplicó StandardScaler para normalizar las 5 variables a media 0 y varianza 1. Sin esta transformación, la calificación y el precio habrían dominado el 90% del cálculo de distancias euclidianas.")
 
     # Gráfica del codo y silueta (SIN TEXTO 'Figura 2...')
-    img_k = "assets/reporte_videojuegos/2_codo_silueta.png"
+    img_k = "assets/2_codo_silueta.png"
     if os.path.exists(img_k):
         pdf.image(img_k, x=25, y=pdf.get_y(), w=160)
         pdf.ln(70)
@@ -271,8 +278,8 @@ def build_clean_documentation_pdf():
     pdf.ln(4)
 
     # Gráficas de soporte en paralelo (SIN TEXTO 'Figura 3...')
-    img_pca = "assets/reporte_videojuegos/3_pca_clusters.png"
-    img_box = "assets/reporte_videojuegos/4_boxplot_ventas.png"
+    img_pca = "assets/3_pca_clusters.png"
+    img_box = "assets/4_boxplot_ventas.png"
     y_g = pdf.get_y()
     if os.path.exists(img_pca) and os.path.exists(img_box):
         pdf.image(img_pca, x=20, y=y_g, w=82)
@@ -302,7 +309,7 @@ def build_clean_documentation_pdf():
     pdf.bullet("Barra Lateral de Filtros", "Permite alternar entre ambas páginas y filtrar simultáneamente por Clúster, Género, Plataforma, Slider de Precio (USD) y Slider de Calificación de la crítica.")
 
     # Imagen de dona (SIN TEXTO 'Figura 4...')
-    img_dona = "assets/reporte_videojuegos/5_dona_proporcion.png"
+    img_dona = "assets/5_dona_proporcion.png"
     if os.path.exists(img_dona):
         pdf.image(img_dona, x=65, y=pdf.get_y(), w=80)
         pdf.ln(70)
