@@ -35,58 +35,81 @@ El riesgo financiero y de inventario estancado en tiendas y distribuidoras por d
 
 ---
 
-## 4. Estructura del Repositorio
+## 4. Herramientas Utilizadas
+* **Lenguaje:** Python 3.11 / 3.12
+* **Machine Learning:** Scikit-Learn (`StandardScaler`, `KMeans`, `silhouette_score`, `PCA`)
+* **Procesamiento de Datos:** Pandas, NumPy
+* **Visualización:** Matplotlib, Seaborn, Plotly Express
+* **Aplicación Web / Dashboard:** Streamlit
+* **Generación de Reportes:** FPDF2
+
+---
+
+## 5. Estructura del Repositorio
 
 ```text
-exameeen/
+examenjulia/
 │
 ├── data/                                              # Datasets del proyecto
-│   ├── videojuegos_ventas_original.csv               # Dataset con 928 filas y anomalías controladas (Parte 2)
-│   └── videojuegos_ventas_procesado.csv              # Dataset limpio con 920 filas y clústeres (Parte 3 y 4)
+│   ├── videojuegos_ventas_original.csv               # Dataset original con 928 filas y anomalías (Parte 2)
+│   └── videojuegos_ventas_procesado.csv              # Dataset procesado limpio con 920 filas y clústeres (Partes 3 y 4)
 │
-├── notebooks/                                         # Entorno interactivo Jupyter
-│   └── proyecto_kmeans_videojuegos.ipynb             # Notebook con todas las celdas ejecutadas (Partes 1 a 5)
+├── docs/                                              # Documentación en PDF para entrega
+│   ├── Documentacion_Oficial_Proyecto_KMeans_Videojuegos.pdf  # Documentación formal completa (8 apartados)
+│   ├── Practica_Examen.pdf                           # Respuestas escritas y tablas de Partes 2 a 5
+│   └── Respuestas_Rubrica_Detallada_Proyecto.pdf      # Desglose punto por punto de la rúbrica
+│
+├── notebooks/                                         # Código interactivo Jupyter
+│   └── proyecto_kmeans_videojuegos.ipynb             # Notebook con todas las celdas ejecutadas
+│
+├── dashboard/                                         # Dashboard interactivo
+│   └── app.py                                         # Aplicación Streamlit con KPIs y filtros interactivos
 │
 ├── src/                                               # Código fuente modular
 │   ├── generate_dataset_videojuegos.py               # Generador del dataset con ruido controlado
-│   ├── process_kmeans_videojuegos.py                 # Pipeline de limpieza, evaluación de K y K-Means
-│   ├── build_official_documentation_pdf.py           # Generador del reporte PDF oficial de 8 apartados (Parte 7)
-│   └── build_rubric_answers_pdf.py                   # Generador del desglose detallado de la rúbrica
+│   ├── process_kmeans_videojuegos.py                 # Pipeline de limpieza, evaluación y K-Means
+│   ├── build_official_documentation_pdf.py           # Generador del reporte PDF oficial
+│   └── build_practica_examen_pdf.py                  # Generador del PDF de práctica de examen
 │
-├── dashboard/                                         # Dashboard interactivo
-│   └── app.py                                         # Aplicación en Streamlit (Páginas 1 y 2 con filtros)
+├── assets/                                            # Gráficas de visualización y diagramas
+│   ├── 1_heatmap_correlacion.png
+│   ├── 2_codo_silueta.png
+│   ├── 3_pca_clusters.png
+│   ├── 4_boxplot_ventas.png
+│   ├── 5_dona_proporcion.png
+│   ├── donde_estan_los_centroides.png
+│   ├── grafica_kmeans_videojuegos.png
+│   └── logo_utslrc.png
 │
-├── docs/                                              # Documentos oficiales de entrega
-│   ├── Documentacion_Oficial_Proyecto_KMeans_Videojuegos.pdf  # Documentación formal de 8 apartados (Parte 7)
-│   └── Respuestas_Rubrica_Detallada_Proyecto.pdf      # Respuestas punto por punto a las Partes 1 a 8
-│
-└── assets/                                            # Gráficas generadas para los reportes
-    └── reporte_videojuegos/
-        ├── 1_heatmap_correlacion.png
-        ├── 2_codo_silueta.png
-        ├── 3_pca_clusters.png
-        ├── 4_boxplot_ventas.png
-        └── 5_dona_proporcion.png
+├── main.py                                            # Script de ejecución del pipeline principal
+├── practica_examen.py                                 # Script de práctica/examen con consola y gráfica interactiva
+├── requirements.txt                                   # Librerías y dependencias
+├── .gitignore                                         # Exclusiones de Git
+└── README.md                                          # Documentación principal del repositorio
 ```
 
 ---
 
-## 5. Instrucciones de Instalación y Ejecución
+## 6. Instrucciones de Instalación y Ejecución
 
-### Requisitos Previos
-* Python 3.11 o superior instalado.
-
-### Instalación de Dependencias
+### 1. Clonar el repositorio e instalar dependencias
 ```bash
+git clone https://github.com/kevssi/examenjulia.git
+cd examenjulia
 pip install -r requirements.txt
 ```
 
-### Ejecutar el Pipeline de Minería de Datos
+### 2. Ejecutar el script del examen (Partes 2, 3, 4 y 5 en consola con gráfica)
 ```bash
-python src/process_kmeans_videojuegos.py
+python practica_examen.py
 ```
 
-### Ejecutar el Dashboard Interactivo
+### 3. Ejecutar el pipeline de Minería de Datos completo
+```bash
+python main.py
+```
+
+### 4. Ejecutar el Dashboard Interactivo
 ```bash
 streamlit run dashboard/app.py
 ```

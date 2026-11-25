@@ -9,9 +9,9 @@ from sklearn.preprocessing import StandardScaler
 
 # 1. Cargar el dataset
 try:
-    df = pd.read_csv("videojuegos_ventas_original.csv")
-except FileNotFoundError:
     df = pd.read_csv("data/videojuegos_ventas_original.csv")
+except FileNotFoundError:
+    df = pd.read_csv("videojuegos_ventas_original.csv")
 
 print("=== Datos originales del dataset ===")
 print(df.head(10))
