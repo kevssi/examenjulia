@@ -26,12 +26,12 @@ El riesgo financiero y de inventario estancado en tiendas y distribuidoras por d
 
 ## 3. Clústeres Descubiertos ($K=4$)
 
-| Clúster | Nombre Asignado | Venta Física Media | Venta Digital Media | Calificación | Proporción | Estrategia de Negocio |
-| :---: | :--- | :---: | :---: | :---: | :---: | :--- |
-| **0** | **Superventas Globales (Blockbusters)** | 8.69 M | 12.00 M | 88.3 pts | 18.4% (169 juegos) | Máxima prioridad de stock físico y publicidad masiva. |
-| **1** | **Fracasos Comerciales y Bajo Rendimiento** | 0.41 M | 0.50 M | 54.1 pts | 24.3% (224 juegos) | No fabricar más discos; aplicar descuentos rápidos de liquidación. |
-| **2** | **Coleccionables de Consola (Físico Fuerte)** | 6.65 M | 2.50 M | 84.2 pts | 22.8% (210 juegos) | Priorizar estanterías físicas y ediciones especiales de colección. |
-| **3** | **Éxitos Digitales e Indies Virales** | 0.60 M | 7.80 M | 82.3 pts | 34.5% (317 juegos) | **Venta 100% digital**; cero gasto en cajas ni fletes de transporte. |
+| Clúster | Nombre Asignado | Venta Física Media | Venta Digital Media | Precio Medio | Calificación Media | Horas Media | Proporción | Estrategia de Negocio |
+| :---: | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
+| **0** | **Superventas Globales (Blockbusters)** | 8.69 M | 12.39 M | $69.99 | 87.7 pts | 46.4 h | 18.4% (169 juegos) | Máxima prioridad de stock físico y publicidad masiva. |
+| **1** | **Fracasos Comerciales y Bajo Rendimiento** | 0.41 M | 0.57 M | $55.97 | 52.7 pts | 17.4 h | 24.3% (224 juegos) | No fabricar más discos; aplicar descuentos rápidos de liquidación. |
+| **2** | **Coleccionables de Consola (Físico Fuerte)** | 6.65 M | 2.87 M | $61.28 | 84.1 pts | 35.8 h | 22.8% (210 juegos) | Priorizar estanterías físicas y ediciones especiales de colección. |
+| **3** | **Éxitos Digitales e Indies Virales** | 0.60 M | 7.71 M | $35.01 | 81.7 pts | 30.3 h | 34.5% (317 juegos) | **Venta 100% digital**; cero gasto en cajas ni fletes de transporte. |
 
 ---
 
